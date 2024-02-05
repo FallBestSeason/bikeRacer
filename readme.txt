@@ -1,5 +1,5 @@
 bike racer game
-by autumn day! https://github.com/DayAut
+by autumn! https://github.com/FallBestSeason
 
 this game is about building and racing fixed gear bikes
 the bikes are customizable, with different parts providing different advantages
