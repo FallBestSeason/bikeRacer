@@ -92,7 +92,7 @@ class BikeShop:
         #todo for each element in bike.items
         name = self.inv.bike.getPartName("frame")
         test = self.inv.getItem(name)
-        frameImage = pygame.image.load(test.get("imagePath"))
+        frameImage = pygame.image.load(f"{self.resPath}{test.get("imagePath")}")
         frameImage = pygame.transform.scale(frameImage, (1024, 1024))
         imageRect = frameImage.get_rect()
         imageRect[0] += 150
@@ -156,12 +156,11 @@ class BikeShop:
 
     #updates button state control and does behaviour when passed a click
     def buttonClickCheck(self, click):
-        self.tertiaryButtons = []
-
         #if primary button clicked, reset + set state accordingly
         #generate secondary buttons from starting pos of primary
         for i, button in enumerate(self.buttons):
             if button.checkClicked(click):
+                self.tertiaryButtons = []
                 self.isOpen = [False, False, False, False, False]
                 self.isOpen[i] = True
                 self.generateSecondaryButtons(i)
@@ -171,6 +170,7 @@ class BikeShop:
         if len(self.secondaryButtons) != 0:
             for i, button in enumerate(self.secondaryButtons):
                 if button.checkClicked(click):
+                    self.tertiaryButtons = []
                     self.generateTertiaryButtons(i)
 
         #updates bike object in invmanager if tertiary button is clicked
@@ -179,4 +179,5 @@ class BikeShop:
             for i, button in enumerate(self.tertiaryButtons):
                 if button.checkClicked(click):
                     self.inv.bike.setPart(self.inv.getItem(button.string))
-                
+                    self.tertiaryButtons = []
+            

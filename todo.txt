@@ -36,3 +36,4 @@ figure out implementation of frame transparency
 back to main menu / go race button in bikeshop
 
 test + fix screen size reactivity
+test tertiary list long enough to go up bikeshop

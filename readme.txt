@@ -14,6 +14,8 @@ development but I don't yet feel capable of working in an enterprise setting.
 The goal of this project is to prove that I can function as a full-stack dev on
 a framework and language I know nothing about. 
 
+art made in pixelorama. very good editor, based in godot!
+
 customizable parts:
 frame
 stem

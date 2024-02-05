@@ -1,2 +1,2 @@
-[{"category": "frame", "name": "big block", "imagePath": "C:\\Users\\Alex\\Desktop\\pyhton stuff\\bikeRacer\\bikeRacer\\GUI\\res\\parts\\frame\\bigBlock.png"},
-{"category": "frame", "name": "thunderdome", "imagePath": "C:\\Users\\Alex\\Desktop\\pyhton stuff\\bikeRacer\\bikeRacer\\GUI\\res\\parts\\frame\\thunderdome.png"}]
+[{"category": "frame", "name": "big block", "imagePath": "\\parts\\frame\\bigBlock.png"},
+{"category": "frame", "name": "thunderdome", "imagePath": "\\parts\\frame\\thunderdome.png"}]
