@@ -62,12 +62,12 @@ class MainMenu:
                                    self.BUTTON_COLOR, self.BUTTON_TEXT_COLOR, 
                                    self.QUIT_BUTTON_STRING))
 
+        #rectangle to define "text box" for logo ascii
         self.logoRect = Rect(self.BUTTON_SPACING, self.BUTTON_SPACING, 
                              screenSize[0] - self.BUTTON_SPACING * 2, 400)
 
     #draws all ui elements in to memory
     def draw(self, pygame, screen):
-
         #background
         pygame.draw.rect(screen, self.BACKGROUND_COLOR, 
                          (0, 0, self.screenSize[0], self.screenSize[1]))
@@ -78,9 +78,9 @@ class MainMenu:
             screen.blit(textSurface, (self.logoRect[0], y_offset))
             y_offset += textSurface.get_height()
         
-        self.buttons[0].draw(pygame, screen)
-        self.buttons[1].draw(pygame, screen)
-        self.buttons[2].draw(pygame, screen)
+        #buttons
+        for button in self.buttons:
+            button.draw(pygame, screen)
 
     #checks if buttons have been clicked, returns text on button if so
     def buttonClickCheck(self, click):

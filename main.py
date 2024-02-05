@@ -14,7 +14,7 @@ def main():
     #gamehandler object represents game states
     #handles logic for which UI to draw
     #and starting and ending races
-    gh = GameHandler(screenSize)
+    gh = GameHandler(screenSize, pygame, screen)
 
     while running:
         for event in pygame.event.get():
@@ -28,13 +28,11 @@ def main():
                         
             #do keeb stuff here
         #game tick 
-                
         #draws current UI
-        gh.draw(pygame, screen)
+        gh.draw()
 
         #puts frame in memory on screen
         pygame.display.flip()
-        
 
 if __name__=="__main__":
     main()
