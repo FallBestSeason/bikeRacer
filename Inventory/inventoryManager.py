@@ -4,7 +4,6 @@ import json
 import os, sys
 current_dir = os.path.dirname(__file__)
 sys.path.append(current_dir)
-from button import Button
 
 class InventoryManager:
     def __init__(self):
@@ -12,25 +11,21 @@ class InventoryManager:
         currentDir = os.path.dirname(__file__)
         resPath = os.path.join(currentDir, "..GUI\\res\\")
 
-        #reads dictionary data from text file
-        #todo
-
-        #testing data 
-        #represent each item in players inventory as element in dictionary
-        self.items = [{
-            "category": "frame",
-            "name": "big block",
-            "imagePath": f"{resPath}\\parts\\frame\\bigBlock.png"
-        }, {
-            "category": "frame",
-            "name": "thunderdome",
-            "imagePath": f"{resPath}\\parts\\frame\\thunderdome.png"
-        }]
+        self.updateItems()
 
         self.write()
 
     def write(self):
         with open("Inventory\\inventory.json", "w") as outfile: 
-            for item in self.items:
-                json.dump(item, outfile) 
-                outfile.write("\n")
+            json.dump(self.items, outfile)
+        #always updates items dict to match file
+        self.updateItems()
+
+    def updateItems(self):
+        #reads dictionary data from text file
+        #category: frame, crankset, rim, etc
+        #name: name, imagePath: path to image
+        with open("Inventory\\inventory.json", "r") as infile:
+            self.items = json.load(infile)
+
+    #todo add and remove itemss

@@ -1,4 +1,6 @@
 todo
-i think json is not creating right from inventory manager
-seems to be missing start and end delimiters
-get inventory manager to read dict from file
+add and remove items in inventory manager
+inventory manager comments
+could mainmenu and bike shop share an inference module?
+    what is cost benefit
+    they need hella cleaning up regardless
