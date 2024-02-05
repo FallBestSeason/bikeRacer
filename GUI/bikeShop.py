@@ -16,6 +16,7 @@ class BikeShop:
     BUTTON_COLOR = (120, 120, 120)
     FONT_COLOR = (0, 0, 0)
     BG_COLOR = (80, 80, 80)
+    NAV_BUTTON_SIZE = (150, 50)
 
     #boolean control vars for branching menu state
     isOpen = [False, False, False, False, False]
@@ -24,11 +25,13 @@ class BikeShop:
     buttons = []
     secondaryButtons = []
     tertiaryButtons = []
+    navButtons = []
 
     #Strings for text elements. may be refactored into textures later
     BUTTON_STRINGS = ["cockpit", "saddle", "drivetrain", "wheels", "frame"]
     SECONDARY_OPTIONS = [["stem", "handlebar", "bar tape"], ["saddle", "seatpost"], 
                          ["crankset", "chainring", "chain", "pedals"], ["cog", "hubs", "spokes", "rims", "tires"], ["frame"]]
+    NAV_STRINGS = ["BACK TO MENU", "GO RACE!"]
 
     def __init__(self, screenSize):
         #gets resouce frolder set up 
@@ -41,24 +44,10 @@ class BikeShop:
         lowerBgHeight = screenSize[1] // 5
         self.lowerBg = Rect(0, lowerBgHeight * 4, screenSize[0], lowerBgHeight)
 
-        #represents the total box available for the primary buttons
-        self.buttonRange = Rect(self.lowerBg[0] + self.BUTTON_SPACING, 
-                           self.lowerBg[1] + self.BUTTON_SPACING,
-                           self.lowerBg[2] - 2 * self.BUTTON_SPACING,
-                           self.lowerBg[3] - 2 * self.BUTTON_SPACING)
-        #calculate width of each button
-        numButtons = 5
-        self.buttonWidth = (self.buttonRange[2] - (numButtons - 1) * self.BUTTON_SPACING) // numButtons
+        self.generateNavButtons()
 
-        #loops through each button, builds object, and adds it to array.
-        #offset is for moving buttons across screen without gaps or overlap.
-        buttonOffset = 0
-        for i, _ in enumerate(range(numButtons)):
-            buttonRect = Rect(self.buttonRange[0] + buttonOffset, self.buttonRange[1], 
-                                self.buttonWidth, self.buttonRange[3])
-            self.buttons.append(Button(buttonRect, self.FONT_SIZE, self.FONT_SPACING,
-                                self.BUTTON_COLOR, self.FONT_COLOR, self.BUTTON_STRINGS[i]))
-            buttonOffset += self.buttonWidth + self.BUTTON_SPACING
+        #generates rects and objects for buttons
+        self.generatePrimaryButtons()
 
         #sets up inventory manager
         self.inv = InventoryManager()
@@ -67,14 +56,19 @@ class BikeShop:
     def draw(self, pygame, screen):
         screen.fill(self.BG_COLOR)
 
+        #draws bike visualization that sits center screen
+        self.drawBikeVisualization(pygame, screen)
+
+        #draws nav buttons
+        for button in self.navButtons:
+            button.draw(pygame, screen)
+
         #draw lower bar buttons sit on
         pygame.draw.rect(screen, self.LOWERBG_COLOR, self.lowerBg)
 
-        #draws each button in lists
+        #draws each button in list
         for button in self.buttons:
             button.draw(pygame, screen)
-
-        self.drawBikeVisualization(pygame, screen)
 
         #draw sub buttons if state requires
         for bool in self.isOpen:
@@ -99,18 +93,56 @@ class BikeShop:
         imageRect[1] -= 100
         screen.blit(frameImage, imageRect)
 
-    #generates and builds array of secondary buttons
-    #called when a primary button is cliked on
+    #populates array of nav button objects
+    def generateNavButtons(self):
+        backButtonRect = (0, 0, self.NAV_BUTTON_SIZE[0], self.NAV_BUTTON_SIZE[1])
+        raceButtonRect = (
+            self.screenSize[0] - self.NAV_BUTTON_SIZE[0], 0, 
+            self.NAV_BUTTON_SIZE[0], self.NAV_BUTTON_SIZE[1])
+        self.navButtons.append(Button(
+                backButtonRect, self.FONT_SIZE, self.FONT_SPACING,
+                self.BUTTON_COLOR, self.FONT_COLOR, self.NAV_STRINGS[0]))
+        self.navButtons.append(Button(
+                raceButtonRect, self.FONT_SIZE, self.FONT_SPACING,
+                self.BUTTON_COLOR, self.FONT_COLOR, self.NAV_STRINGS[1]))
+
+    #generates array of primary buttons
+    def generatePrimaryButtons(self):
+        #represents the total box available for the primary buttons
+        self.buttonRange = Rect(
+            self.lowerBg[0] + self.BUTTON_SPACING, 
+            self.lowerBg[1] + self.BUTTON_SPACING,
+            self.lowerBg[2] - 2 * self.BUTTON_SPACING,
+            self.lowerBg[3] - 2 * self.BUTTON_SPACING)
+        #calculate width of each button
+        numButtons = 5
+        self.buttonWidth = (self.buttonRange[2] - (numButtons - 1) * self.BUTTON_SPACING) // numButtons
+
+        #loops through each button, builds object, and adds it to array.
+        #offset is for moving buttons across screen without gaps or overlap.
+        buttonOffset = 0
+        for i, _ in enumerate(range(numButtons)):
+            buttonRect = Rect(
+                self.buttonRange[0] + buttonOffset, self.buttonRange[1], 
+                self.buttonWidth, self.buttonRange[3])
+            self.buttons.append(Button(
+                buttonRect, self.FONT_SIZE, self.FONT_SPACING,
+                self.BUTTON_COLOR, self.FONT_COLOR, self.BUTTON_STRINGS[i]))
+            buttonOffset += self.buttonWidth + self.BUTTON_SPACING
+
+    #generates and builds array of secondary buttons off of button that was clicked
     def generateSecondaryButtons(self, ind):
         self.secondaryButtons = []
         buttonOffset = 0
         for i, string in enumerate(self.SECONDARY_OPTIONS[ind]):
-            buttonRect = (self.buttonRange[0] + ((self.buttonWidth + self.BUTTON_SPACING) * ind), 
-                          self.buttonRange[1] - self.SECONDARY_BUTTON_HEIGHT - self.BUTTON_SPACING + buttonOffset,
-                          self.buttonWidth, self.SECONDARY_BUTTON_HEIGHT)
-            self.secondaryButtons.append(Button(buttonRect, self.FONT_SIZE, self.FONT_SPACING,
-                                                self.BUTTON_COLOR, self.FONT_COLOR, 
-                                                self.SECONDARY_OPTIONS[ind][i]))
+            buttonRect = (
+                self.buttonRange[0] + ((self.buttonWidth + self.BUTTON_SPACING) * ind), 
+                self.buttonRange[1] - self.SECONDARY_BUTTON_HEIGHT - self.BUTTON_SPACING + buttonOffset,
+                self.buttonWidth, self.SECONDARY_BUTTON_HEIGHT)
+            self.secondaryButtons.append(Button(
+                buttonRect, self.FONT_SIZE, self.FONT_SPACING,
+                self.BUTTON_COLOR, self.FONT_COLOR, 
+                self.SECONDARY_OPTIONS[ind][i]))
             buttonOffset -= self.SECONDARY_BUTTON_HEIGHT + self.BUTTON_SPACING
 
     #generate tertiary button options given that a subbutton was clicked
@@ -156,6 +188,11 @@ class BikeShop:
 
     #updates button state control and does behaviour when passed a click
     def buttonClickCheck(self, click):
+        #checks if nav buttons have been pressed
+        for button in self.navButtons:
+            if button.checkClicked(click):
+                return button.string
+
         #if primary button clicked, reset + set state accordingly
         #generate secondary buttons from starting pos of primary
         for i, button in enumerate(self.buttons):
@@ -180,4 +217,3 @@ class BikeShop:
                 if button.checkClicked(click):
                     self.inv.bike.setPart(self.inv.getItem(button.string))
                     self.tertiaryButtons = []
-            
