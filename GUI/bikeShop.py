@@ -26,7 +26,7 @@ class BikeShop:
     #Strings for text elements. may be refactored into textures later
     BUTTON_STRINGS = ["cockpit", "saddle", "drivetrain", "wheels", "Frame"]
     SECONDARY_OPTIONS = [["stem", "handlebar", "bar tape"], ["saddle", "seatpost"], 
-                         ["crankset", "f. chainring", "chain", "pedals"], ["r. cog", "hubs", "spokes", "rims"], ["Frame"]]
+                         ["crankset", "f. chainring", "chain", "pedals"], ["r. cog", "hubs", "spokes", "rims", "tires"], ["Frame"]]
 
     def __init__(self, screenSize):
         #gets resouce frolder set up 

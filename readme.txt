@@ -1,9 +1,17 @@
-bike racer game
+Welcome to BikeRacer!
 by autumn! https://github.com/FallBestSeason
 
-this game is about building and racing fixed gear bikes
-the bikes are customizable, with different parts providing different advantages
-inspired by the gameplay loop of racing games and the gun building of escape from tarkov. 
+this game is about building and racing fixed gear bikes on criterium tracks
+the bikes are customizable, with different parts providing different pros and cons
+inspired by: 
+    -the gameplay loop and car upgrading of forza motorsport 3 
+    -the gun building of escape from tarkov
+    -the customization of FR legends
+
+I am making this game to get better at coding. I have an associates in software
+development but I don't yet feel capable of working in an enterprise setting. 
+The goal of this project is to prove that I can function as a full-stack dev on
+a framework I know nothing about. 
 
 customizable parts:
 cockpit
@@ -23,6 +31,7 @@ wheelset:
         hubs
         spokes
         rims
+        tires
 
 basic program breakdown:
 main
@@ -32,11 +41,9 @@ gameHandler
     handles state change between game screens
     passes needed references to gui elements
 
-inventory (todo)
-    handles items and keeps them in inventory
-    handles saving inventory on game quit
-    handles loading inventory on game open
-    hands inventory data off to gui modules for use
+inventory
+    handles inventory.json file 
+    represents items to be acessed in shop 
 
 GUI folder
     contains resources and modules for GUI functionality.

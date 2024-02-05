@@ -1,6 +1,7 @@
 todo
-add and remove items in inventory manager
-inventory manager comments
+remove items in inventory manager
+inventory manager cleanup
 could mainmenu and bike shop share an inference module?
     what is cost benefit
     they need hella cleaning up regardless
+update / initalize inventory.json from somewhere with a relative path
