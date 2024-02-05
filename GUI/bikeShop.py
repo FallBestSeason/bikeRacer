@@ -15,6 +15,7 @@ class BikeShop:
     LOWERBG_COLOR = (0, 80, 100)
     BUTTON_COLOR = (120, 120, 120)
     FONT_COLOR = (0, 0, 0)
+    BG_COLOR = (80, 80, 80)
 
     #boolean control vars for branching menu state
     isOpen = [False, False, False, False, False]
@@ -27,15 +28,12 @@ class BikeShop:
     #Strings for text elements. may be refactored into textures later
     BUTTON_STRINGS = ["cockpit", "saddle", "drivetrain", "wheels", "frame"]
     SECONDARY_OPTIONS = [["stem", "handlebar", "bar tape"], ["saddle", "seatpost"], 
-                         ["crankset", "f. chainring", "chain", "pedals"], ["r. cog", "hubs", "spokes", "rims", "tires"], ["frame"]]
+                         ["crankset", "chainring", "chain", "pedals"], ["cog", "hubs", "spokes", "rims", "tires"], ["frame"]]
 
     def __init__(self, screenSize):
         #gets resouce frolder set up 
         currentDir = os.path.dirname(__file__)
-        resPath = os.path.join(currentDir, "res\\")
-
-        #set up text renderer
-        text = pygame.font.Font(resPath+"font.ttf", self.FONT_SIZE)
+        self.resPath = os.path.join(currentDir, "res\\")
 
         self.screenSize = screenSize
 
@@ -67,20 +65,39 @@ class BikeShop:
         
     #draws all elements of class to backside (called each tick)
     def draw(self, pygame, screen):
-        screen.fill((0, 0, 0))
+        screen.fill(self.BG_COLOR)
+
+        #draw lower bar buttons sit on
         pygame.draw.rect(screen, self.LOWERBG_COLOR, self.lowerBg)
 
         #draws each button in lists
         for button in self.buttons:
             button.draw(pygame, screen)
 
+        self.drawBikeVisualization(pygame, screen)
+
+        #draw sub buttons if state requires
         for bool in self.isOpen:
             if bool:
                 for button in self.secondaryButtons:
                     button.draw(pygame, screen)
 
+        #draw sub-sub-buttons if nessecary
         for button in self.tertiaryButtons:
             button.draw(pygame, screen)
+
+    #draws bike to screen
+    #will be massively rewritten in future!
+    def drawBikeVisualization(self, pygame, screen):
+        #todo for each element in bike.items
+        name = self.inv.bike.getPartName("frame")
+        test = self.inv.getItem(name)
+        frameImage = pygame.image.load(test.get("imagePath"))
+        frameImage = pygame.transform.scale(frameImage, (1024, 1024))
+        imageRect = frameImage.get_rect()
+        imageRect[0] += 150
+        imageRect[1] -= 100
+        screen.blit(frameImage, imageRect)
 
     #generates and builds array of secondary buttons
     #called when a primary button is cliked on
@@ -141,13 +158,25 @@ class BikeShop:
     def buttonClickCheck(self, click):
         self.tertiaryButtons = []
 
+        #if primary button clicked, reset + set state accordingly
+        #generate secondary buttons from starting pos of primary
         for i, button in enumerate(self.buttons):
             if button.checkClicked(click):
                 self.isOpen = [False, False, False, False, False]
                 self.isOpen[i] = True
                 self.generateSecondaryButtons(i)
 
+        #if secondary button clicked, generate tertiary buttons
+        #generation uses location of button clicked
         if len(self.secondaryButtons) != 0:
             for i, button in enumerate(self.secondaryButtons):
                 if button.checkClicked(click):
                     self.generateTertiaryButtons(i)
+
+        #updates bike object in invmanager if tertiary button is clicked
+        #calls screen to update drawing of bike too
+        if len(self.tertiaryButtons) != 0:
+            for i, button in enumerate(self.tertiaryButtons):
+                if button.checkClicked(click):
+                    self.inv.bike.setPart(self.inv.getItem(button.string))
+                

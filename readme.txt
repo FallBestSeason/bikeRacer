@@ -12,27 +12,24 @@ inspired by:
 I am making this game to get better at coding. I have an associates in software
 development but I don't yet feel capable of working in an enterprise setting. 
 The goal of this project is to prove that I can function as a full-stack dev on
-a framework I know nothing about. 
+a framework and language I know nothing about. 
 
 customizable parts:
-cockpit
-    stem
-    bar
-        tape
-saddle:
-    saddle 
-    seatpost
-drivetrain:
-    crankset
-        f.chainring
-    chain
-    pedals
-wheelset:   
-        r. cog
-        hubs
-        spokes
-        rims
-        tires
+frame
+stem
+bar
+tape
+saddle 
+seatpost
+crankset
+chainring
+chains
+pedals   
+cog
+hubs
+spokes
+rims
+tires
 
 basic program breakdown:
 main
@@ -42,9 +39,20 @@ gameHandler
     handles state change between game screens
     passes needed references to gui elements
 
-inventory
-    handles inventory.json file 
-    represents items to be acessed in shop 
+inventory folder
+    contains modlues and json files pertaining to inventory and item management
+
+    inventoryManager
+        handles inventory.json file 
+        represents items to be acessed in shop 
+        handles bike instance object
+
+    items.json
+        complete list of every item and it's attributes
+
+    inventory.json
+        list of items that are acessable to player
+        used to create shop ui elements
 
 GUI folder
     contains resources and modules for GUI functionality.

@@ -1,12 +1,38 @@
-todo
+current:
+get image to change when button clicked
+
+todo:
+
 remove items in inventory manager
 inventory manager cleanup
+
 could mainmenu and bike shop share an inference module?
     what is cost benefit
     they need hella cleaning up regardless
-bikeshop cleanup, addbutton method? lots of repeat calls to vars and similar math
+
+bikeshop cleanup, comments need redone
+    addbutton method? lots of repeat calls to vars and similar math
+    also just a big mess, maybe could use abstracted into smaller parts
+    as part of shared inference module upgrade?
     
 update / initalize inventory.json from somewhere with a relative path
     make json list of all items, contains name, cat, atribs
     path will be computed at runtime by whatever is handling this
     use itemname like ID
+
+fix god awful optimization between inventorymanager and bikeshop,
+reads through every item in players inventory every frame
+will require restructuring in bikeshop and rewrite of acess methods
+in inventoryManager and bike classes
+
+implement dirty squares in gui screens?
+assuming it will be needed for game screens
+
+figure out implementation of frame transparency
+    either each frame needs to have two paths somehow
+    or each frame needs to have to item names and textures
+    or no more rear frame lols
+
+back to main menu / go race button in bikeshop
+
+test + fix screen size reactivity
