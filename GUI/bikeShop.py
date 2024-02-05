@@ -4,6 +4,7 @@ import os, sys
 current_dir = os.path.dirname(__file__)
 sys.path.append(current_dir)
 from button import Button
+from Inventory.inventoryManager import InventoryManager
 
 class BikeShop:
     #Constants for UI stuff
@@ -16,17 +17,16 @@ class BikeShop:
     FONT_COLOR = (0, 0, 0)
 
     #boolean control vars for branching menu state
-    isOpen = [False, False, False, False]
+    isOpen = [False, False, False, False, False]
 
     #other mutable vars
     buttons = []
     secondaryButtons = []
 
-
     #Strings for text elements. may be refactored into textures later
-    BUTTON_STRINGS = ["cockpit", "saddle", "drivetrain", "wheels"]
+    BUTTON_STRINGS = ["cockpit", "saddle", "drivetrain", "wheels", "Frame"]
     SECONDARY_OPTIONS = [["stem", "handlebar", "bar tape"], ["saddle", "seatpost"], 
-                         ["crankset", "f. chainring", "chain", "pedals"], ["r. cog", "hubs", "spokes", "rims"]]
+                         ["crankset", "f. chainring", "chain", "pedals"], ["r. cog", "hubs", "spokes", "rims"], ["Frame"]]
 
     def __init__(self, screenSize):
         #gets resouce frolder set up 
@@ -38,17 +38,19 @@ class BikeShop:
 
         self.screenSize = screenSize
 
+        #set up lower stripe that acts as background for buttons
         lowerBgHeight = screenSize[1] // 5
         self.lowerBg = Rect(0, lowerBgHeight * 4, screenSize[0], lowerBgHeight)
 
-        #button setup with rects. figures out spacing of buttons for any given screen res.
-        #represents the total range available for the buttons
+        #represents the total box available for the primary buttons
         self.buttonRange = Rect(self.lowerBg[0] + self.BUTTON_SPACING, 
                            self.lowerBg[1] + self.BUTTON_SPACING,
                            self.lowerBg[2] - 2 * self.BUTTON_SPACING,
                            self.lowerBg[3] - 2 * self.BUTTON_SPACING)
-        numButtons = 4
+        #calculate width of each button
+        numButtons = 5
         self.buttonWidth = (self.buttonRange[2] - (numButtons - 1) * self.BUTTON_SPACING) // numButtons
+
         #loops through each button, builds object, and adds it to array.
         #offset is for moving buttons across screen without gaps or overlap.
         buttonOffset = 0
@@ -58,6 +60,9 @@ class BikeShop:
             self.buttons.append(Button(buttonRect, self.FONT_SIZE, self.FONT_SPACING,
                                 self.BUTTON_COLOR, self.FONT_COLOR, self.BUTTON_STRINGS[i]))
             buttonOffset += self.buttonWidth + self.BUTTON_SPACING
+
+        #sets up inventory manager
+        inv = InventoryManager()
         
     #draws all elements of class to backside (called each tick)
     def draw(self, pygame, screen):
@@ -72,8 +77,9 @@ class BikeShop:
             if bool:
                 for button in self.secondaryButtons:
                     button.draw(pygame, screen)
-                    print(f"{self.isOpen}, {button.string}")
 
+    #generates and builds array of secondary buttons
+    #called when a primary button is cliked on
     def generateSecondaryButtons(self, ind):
         self.secondaryButtons = []
         buttonOffset = 0
@@ -86,10 +92,10 @@ class BikeShop:
                                                 self.SECONDARY_OPTIONS[ind][i]))
             buttonOffset -= self.SECONDARY_BUTTON_HEIGHT + self.BUTTON_SPACING
 
-    #todo behaviour that stays in here probablys
+    #updates button state control and does behaviour when passed a click
     def buttonClickCheck(self, click):
         for i, button in enumerate(self.buttons):
             if button.checkClicked(click):
-                self.isOpen = [False, False, False, False]
+                self.isOpen = [False, False, False, False, False]
                 self.isOpen[i] = True
                 self.generateSecondaryButtons(i)

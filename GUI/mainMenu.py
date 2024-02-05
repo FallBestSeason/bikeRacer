@@ -13,7 +13,8 @@ class MainMenu:
     BUTTON_FONT_SPACING = 10    
     BACKGROUND_COLOR = (0, 80, 100)
     BUTTON_COLOR = (120, 120, 120)
-    BUTTON_TEXT_COLOR =(0, 0, 0)
+    BUTTON_TEXT_COLOR = (0, 0, 0)
+    LOGO_COLOR = (0, 0, 0)
 
     #strings for text elements that don't need a resource
     #will probably be refactored out later in support of button textures  
@@ -38,7 +39,7 @@ class MainMenu:
         #Render each line of the logo text
         self.logoRendered = []
         for line in logoLines:
-            self.logoRendered.append(logoFont.render(line, True, (255, 255, 255)))
+            self.logoRendered.append(logoFont.render(line, True, self.LOGO_COLOR))
 
         self.screenSize = screenSize
 

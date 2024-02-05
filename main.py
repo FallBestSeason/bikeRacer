@@ -1,5 +1,8 @@
 import pygame
 from gameHandler import GameHandler
+import os, sys
+current_dir = os.path.dirname(__file__)
+sys.path.append(current_dir)
 
 def main():
     #varss
