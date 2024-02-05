@@ -68,4 +68,3 @@ GUI folder
         handles data about gui elements, sizes, positions, colors, resource refs, etc
         handles drawing each gui element in correct order
         handles button click logic for gameHandler
-

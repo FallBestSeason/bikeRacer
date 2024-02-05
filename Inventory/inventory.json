@@ -1,2 +1,4 @@
-[{"category": "frame", "name": "big block", "imagePath": "\\parts\\frame\\bigBlock.png"},
-{"category": "frame", "name": "thunderdome", "imagePath": "\\parts\\frame\\thunderdome.png"}]
+[{"category": "frame", "name": "big block", "imagePath": "\\parts\\frame\\bigBlock1.png"},
+{"category": "frame", "name": "thunderdome", "imagePath": "\\parts\\frame\\thunderdome1.png"},
+{"category": "subframe", "name": "big block subframe", "imagePath": "\\parts\\frame\\bigBlock0.png"},
+{"category": "subframe", "name": "thunderdome subframe", "imagePath": "\\parts\\frame\\thunderdome0.png"}]

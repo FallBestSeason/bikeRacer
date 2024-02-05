@@ -1,10 +1,6 @@
 current:
 more parts + logic for bike visualizer
-make json list of all items, contains name, cat
-figure out implementation of frame transparency
-    either each frame needs to have two paths somehow
-    or each frame needs to have to item names and textures
-    or no more rear frame lols
+make json list of all items, contains name, cat, path
 
 todo:
 

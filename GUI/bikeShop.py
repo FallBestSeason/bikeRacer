@@ -85,13 +85,24 @@ class BikeShop:
     def drawBikeVisualization(self, pygame, screen):
         #todo for each element in bike.items
         name = self.inv.bike.getPartName("frame")
-        test = self.inv.getItem(name)
-        frameImage = pygame.image.load(f"{self.resPath}{test.get("imagePath")}")
+        namedItem = self.inv.getItem(name)
+        frameImage = pygame.image.load(f"{self.resPath}{namedItem.get("imagePath")}")
         frameImage = pygame.transform.scale(frameImage, (1024, 1024))
+
+        name = self.inv.bike.getPartName("subframe")
+        namedItem = self.inv.getItem(name)
+        subFrameImage = pygame.image.load(f"{self.resPath}{namedItem.get("imagePath")}")
+        subFrameImage = pygame.transform.scale(subFrameImage, (1024, 1024))
+
         imageRect = frameImage.get_rect()
         imageRect[0] += 150
         imageRect[1] -= 100
+        screen.blit(subFrameImage, imageRect)
         screen.blit(frameImage, imageRect)
+
+        #order of frame elements:
+        #lower frame, spokes, rim, hubs, seatpost, stem, bars / tape, upper frame
+        #chainring, chain, cranks, pedals, wheel nuts
 
     #populates array of nav button objects
     def generateNavButtons(self):
@@ -215,5 +226,9 @@ class BikeShop:
         if len(self.tertiaryButtons) != 0:
             for i, button in enumerate(self.tertiaryButtons):
                 if button.checkClicked(click):
-                    self.inv.bike.setPart(self.inv.getItem(button.string))
+                    clickedPart = self.inv.getItem(button.string)
+                    self.inv.bike.setPart(clickedPart)
+                    if clickedPart.get("category") == "frame":
+                        test = self.inv.getSubFrame(button.string)
+                        self.inv.bike.setPart(self.inv.getSubFrame(button.string))
                     self.tertiaryButtons = []
