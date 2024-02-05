@@ -22,11 +22,12 @@ class BikeShop:
     #other mutable vars
     buttons = []
     secondaryButtons = []
+    tertiaryButtons = []
 
     #Strings for text elements. may be refactored into textures later
-    BUTTON_STRINGS = ["cockpit", "saddle", "drivetrain", "wheels", "Frame"]
+    BUTTON_STRINGS = ["cockpit", "saddle", "drivetrain", "wheels", "frame"]
     SECONDARY_OPTIONS = [["stem", "handlebar", "bar tape"], ["saddle", "seatpost"], 
-                         ["crankset", "f. chainring", "chain", "pedals"], ["r. cog", "hubs", "spokes", "rims", "tires"], ["Frame"]]
+                         ["crankset", "f. chainring", "chain", "pedals"], ["r. cog", "hubs", "spokes", "rims", "tires"], ["frame"]]
 
     def __init__(self, screenSize):
         #gets resouce frolder set up 
@@ -62,7 +63,7 @@ class BikeShop:
             buttonOffset += self.buttonWidth + self.BUTTON_SPACING
 
         #sets up inventory manager
-        inv = InventoryManager()
+        self.inv = InventoryManager()
         
     #draws all elements of class to backside (called each tick)
     def draw(self, pygame, screen):
@@ -78,6 +79,9 @@ class BikeShop:
                 for button in self.secondaryButtons:
                     button.draw(pygame, screen)
 
+        for button in self.tertiaryButtons:
+            button.draw(pygame, screen)
+
     #generates and builds array of secondary buttons
     #called when a primary button is cliked on
     def generateSecondaryButtons(self, ind):
@@ -92,10 +96,58 @@ class BikeShop:
                                                 self.SECONDARY_OPTIONS[ind][i]))
             buttonOffset -= self.SECONDARY_BUTTON_HEIGHT + self.BUTTON_SPACING
 
+    #generate tertiary button options given that a subbutton was clicked
+    def generateTertiaryButtons(self, ind):
+        #ind in secondarybuttons
+        self.tertiaryButtons = []
+        buttonOffset = 0
+        #1 for positive -1 for negative (weird! screen coords are top left)
+        buttonYDirection = 0
+        buttonXDirection = 1
+        #get list of inventory items given a category (new method in invmanager?)
+        items = self.inv.getAllInCat(self.secondaryButtons[ind].string)
+
+        #if height of upcoming buttons is greater than distance between bar and top of current button
+        if (self.SECONDARY_BUTTON_HEIGHT + buttonOffset) * len(items) > self.lowerBg[1] - self.secondaryButtons[ind].rect[0]:
+            #buttons go up!
+            buttonYDirection = -1
+        else:
+            #buttons go down!
+            buttonYDirection = 1
+
+        #if button is the last one
+        if ind == len(self.secondaryButtons) - 1:
+            #buttons go to the left!
+            buttonXDirection = -1
+
+        #calculate position of -each button and put it into tertiaryButtons as a rect (foreach item in list in category)
+        for item in items:
+            x = self.secondaryButtons[ind].rect[0] + self.buttonWidth + self.BUTTON_SPACING
+            y = self.secondaryButtons[ind].rect[1] + buttonOffset
+            w = self.buttonWidth
+            h = self.SECONDARY_BUTTON_HEIGHT
+            buttonRect = Rect(x, y, w, h)
+            if buttonXDirection == -1:
+                buttonRect[0] -= 2 * (self.buttonWidth + self.BUTTON_SPACING)
+            self.tertiaryButtons.append(Button(buttonRect, self.FONT_SIZE, self.FONT_SPACING,
+                                                self.BUTTON_COLOR, self.FONT_COLOR, 
+                                                item.get("name")))
+            if buttonYDirection == 1:
+                buttonOffset += self.SECONDARY_BUTTON_HEIGHT + self.BUTTON_SPACING
+            else:
+                buttonOffset -= self.SECONDARY_BUTTON_HEIGHT + self.BUTTON_SPACING
+
     #updates button state control and does behaviour when passed a click
     def buttonClickCheck(self, click):
+        self.tertiaryButtons = []
+
         for i, button in enumerate(self.buttons):
             if button.checkClicked(click):
                 self.isOpen = [False, False, False, False, False]
                 self.isOpen[i] = True
                 self.generateSecondaryButtons(i)
+
+        if len(self.secondaryButtons) != 0:
+            for i, button in enumerate(self.secondaryButtons):
+                if button.checkClicked(click):
+                    self.generateTertiaryButtons(i)

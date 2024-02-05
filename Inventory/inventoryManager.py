@@ -51,3 +51,11 @@ class InventoryManager:
             "filePath": path
         })
         self.write()
+
+    #returns list of dict entries containing same category as passed in
+    def getAllInCat(self, cat):
+        inCat = []
+        for item in self.items:
+            if item.get("category") == cat:
+               inCat.append(item) 
+        return inCat

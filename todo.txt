@@ -4,4 +4,9 @@ inventory manager cleanup
 could mainmenu and bike shop share an inference module?
     what is cost benefit
     they need hella cleaning up regardless
+bikeshop cleanup, addbutton method? lots of repeat calls to vars and similar math
+    
 update / initalize inventory.json from somewhere with a relative path
+    make json list of all items, contains name, cat, atribs
+    path will be computed at runtime by whatever is handling this
+    use itemname like ID
