@@ -7,6 +7,7 @@ inspired by:
     -the gameplay loop and car upgrading of forza motorsport 3 
     -the gun building of escape from tarkov
     -the customization of FR legends
+    -my love of fixed gear bikes and the scene
 
 I am making this game to get better at coding. I have an associates in software
 development but I don't yet feel capable of working in an enterprise setting. 
