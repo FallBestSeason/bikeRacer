@@ -13,6 +13,9 @@ class InventoryManager:
         #pulls items from inventory json file
         self.updateItems()
 
+        #self.addItem("stem", "RXL", "parts/stem/RXL.png")
+        self.removeItem("RXL")
+
     #writes current content of self.items to json file
     def write(self):
         with open(self.jsonFilePath, "w") as outfile:
@@ -35,11 +38,11 @@ class InventoryManager:
         self.items = [{
             "category": "frame",
             "name": "big block",
-            "imagePath": "C:\\Users\\Alex\\Desktop\\pyhton stuff\\bikeRacer\\bikeRacer\\Inventory\\..GUI\\res\\\\parts\\frame\\bigBlock.png"
+            "imagePath": "parts\\frame\\bigBlock.png"
             }, {
             "category": "frame", 
             "name": "thunderdome", 
-            "imagePath": "C:\\Users\\Alex\\Desktop\\pyhton stuff\\bikeRacer\\bikeRacer\\Inventory\\..GUI\\res\\\\parts\\frame\\thunderdome.png"
+            "imagePath": "\\parts\\frame\\thunderdome.png"
             }]
         """
 
@@ -50,6 +53,15 @@ class InventoryManager:
             "name": name,
             "filePath": path
         })
+        self.write()
+
+    #removes item with given name
+    def removeItem(self, name):
+        rebuild = []
+        for item in self.items:
+            if item.get("name") != name:
+                rebuild.append(item)
+        self.items = rebuild
         self.write()
 
     #returns list of dict entries containing same category as passed in
