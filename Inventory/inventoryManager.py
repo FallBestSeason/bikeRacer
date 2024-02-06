@@ -6,30 +6,31 @@ current_dir = os.path.dirname(__file__)
 sys.path.append(current_dir)
 
 class Bike:
-    items = {
-        "frame": "big block",
+    bikeItems = {
         "subframe": "big block subframe",
-        "stem": "",
-        "bar": "",
-        "tape": "",
-        "saddle": "",
-        "seatpost": "",
-        "crankset": "",
-        "chainring": "",
-        "chains": "",
-        "pedals": "",
+        "stem": "used alloy stem",
+        "bar": "flat",
+        "seatpost": "used alloy post",
+        "saddle": "powercomp",
+        "hubs": "formula track",
+        "rims": "alex DH19",
+        "tires": "gatorskins",
         "cog": "",
-        "hubs": "",
-        "spokes": "",
-        "rims": "",
-        "tires": "",
+        "frame": "big block",
+        "chainring": "used alloy chainring",
+        "chain": "standard chain",
+        "crankset": "used alloy crankset",
+        "pedals": "flats",
     }
 
     def setPart(self, part):
-        self.items[part.get("category")] = part.get("name")
+        self.bikeItems[part.get("category")] = part.get("name")
 
     def getPartName(self, cat):
-        return self.items[cat]
+        return self.bikeItems[cat]
+    
+    def getDict(self):
+        return self.bikeItems
         
 
 class InventoryManager:

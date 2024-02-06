@@ -1,6 +1,5 @@
 current:
-more parts + logic for bike visualizer
-make json list of all items, contains name, cat, path
+frame tertiary dosent go left
 
 todo:
 
@@ -9,7 +8,7 @@ races
 figure out atribute system and how it will relate to races
 
 remove items in inventory manager
-inventory manager cleanup
+inventory manager cleanup + comments
 
 could mainmenu and bike shop share an inference module?
     what is cost benefit
@@ -29,6 +28,7 @@ implement dirty squares in gui screens?
 assuming it will be needed for game screens
 
 test + fix screen size reactivity
-test tertiary list long enough to go up bikeshop
 
 main menu kinda just need a rewrite lmao
+
+fix bug where indexoutofrange if you leave the shop, come back in, select a button

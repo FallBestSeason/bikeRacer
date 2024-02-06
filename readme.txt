@@ -29,7 +29,6 @@ chains
 pedals   
 cog
 hubs
-spokes
 rims
 tires
 

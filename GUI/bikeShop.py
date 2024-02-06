@@ -29,8 +29,9 @@ class BikeShop:
 
     #Strings for text elements. may be refactored into textures later
     BUTTON_STRINGS = ["cockpit", "saddle", "drivetrain", "wheels", "frame"]
-    SECONDARY_OPTIONS = [["stem", "handlebar", "bar tape"], ["saddle", "seatpost"], 
-                         ["crankset", "chainring", "chain", "pedals"], ["cog", "hubs", "spokes", "rims", "tires"], ["frame"]]
+    SECONDARY_OPTIONS = [["stem", "bar", "bar tape"], ["saddle", "seatpost"], 
+                         ["crankset", "chainring", "chain", "pedals"], 
+                         ["cog", "hubs", "rims", "tires"], ["frame"]]
     NAV_STRINGS = ["BACK TO MENU", "GO RACE!"]
 
     def __init__(self, screenSize):
@@ -83,26 +84,15 @@ class BikeShop:
     #draws bike to screen
     #will be massively rewritten in future!
     def drawBikeVisualization(self, pygame, screen):
-        #todo for each element in bike.items
-        name = self.inv.bike.getPartName("frame")
-        namedItem = self.inv.getItem(name)
-        frameImage = pygame.image.load(f"{self.resPath}{namedItem.get("imagePath")}")
-        frameImage = pygame.transform.scale(frameImage, (1024, 1024))
-
-        name = self.inv.bike.getPartName("subframe")
-        namedItem = self.inv.getItem(name)
-        subFrameImage = pygame.image.load(f"{self.resPath}{namedItem.get("imagePath")}")
-        subFrameImage = pygame.transform.scale(subFrameImage, (1024, 1024))
-
-        imageRect = frameImage.get_rect()
-        imageRect[0] += 150
-        imageRect[1] -= 100
-        screen.blit(subFrameImage, imageRect)
-        screen.blit(frameImage, imageRect)
-
-        #order of frame elements:
-        #lower frame, spokes, rim, hubs, seatpost, stem, bars / tape, upper frame
-        #chainring, chain, cranks, pedals, wheel nuts
+        for key, value in self.inv.bike.getDict().items():
+            if value != '':
+                namedItem = self.inv.getItem(value)
+                currentImage = pygame.image.load(f"{self.resPath}{namedItem.get("imagePath")}")
+                currentImage = pygame.transform.scale(currentImage, (800, 800))
+                imageRect = currentImage.get_rect()
+                imageRect[0] += 60
+                imageRect[1] -= 50
+                screen.blit(currentImage, imageRect)
 
     #populates array of nav button objects
     def generateNavButtons(self):
@@ -176,9 +166,9 @@ class BikeShop:
             buttonYDirection = 1
 
         #if button is the last one
-        if ind == len(self.secondaryButtons) - 1:
+        if self.buttons[ind] == self.buttons[-1]:
             #buttons go to the left!
-            buttonXDirection = -1
+            buttonXDirection = -1 
 
         #calculate position of -each button and put it into tertiaryButtons as a rect (foreach item in list in category)
         for item in items:
