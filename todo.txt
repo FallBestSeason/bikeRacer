@@ -1,11 +1,16 @@
 current:
-frame tertiary dosent go left
 
 todo:
 
 races
 
 figure out atribute system and how it will relate to races
+    display attributes of current build on right of screen in bikeshop
+
+figure out system to purchase non-inventory items
+    maybe change bikeshop to populate from items instead of from inventory?
+    clicking on non-unlocked item opens a pop up to purchase it
+    you can't see the stats until purchased ofc, encourage a mf to buy everything
 
 remove items in inventory manager
 inventory manager cleanup + comments

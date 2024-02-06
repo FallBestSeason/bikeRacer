@@ -39,7 +39,11 @@ class BikeShop:
         currentDir = os.path.dirname(__file__)
         self.resPath = os.path.join(currentDir, "res\\")
 
+        #import screensize from method
         self.screenSize = screenSize
+
+        #clears button arrays
+        self.buttons = []
 
         #set up lower stripe that acts as background for buttons
         lowerBgHeight = screenSize[1] // 5
@@ -154,11 +158,11 @@ class BikeShop:
         #1 for positive -1 for negative (weird! screen coords are top left)
         buttonYDirection = 0
         buttonXDirection = 1
-        #get list of inventory items given a category (new method in invmanager?)
+        #get list of inventory items given a category
         items = self.inv.getAllInCat(self.secondaryButtons[ind].string)
 
         #if height of upcoming buttons is greater than distance between bar and top of current button
-        if (self.SECONDARY_BUTTON_HEIGHT + buttonOffset) * len(items) > self.lowerBg[1] - self.secondaryButtons[ind].rect[0]:
+        if (self.SECONDARY_BUTTON_HEIGHT + buttonOffset) * len(items) > self.lowerBg[1] - self.secondaryButtons[ind].rect[1]:
             #buttons go up!
             buttonYDirection = -1
         else:
@@ -166,7 +170,8 @@ class BikeShop:
             buttonYDirection = 1
 
         #if button is the last one
-        if self.buttons[ind] == self.buttons[-1]:
+        #NOT how we should be doing this lmao
+        if self.isOpen[4]:
             #buttons go to the left!
             buttonXDirection = -1 
 
