@@ -37,3 +37,31 @@ test + fix screen size reactivity
 main menu kinda just need a rewrite lmao
 
 fix bug where indexoutofrange if you leave the shop, come back in, select a button
+
+figure out: money and cost of items, add element to items.json?
+
+RACE TODO:
+controls:
+a / d to lean over / steer
+w to accelerate
+spacebar to skid (only way to slow down)
+steps bike out sideways and alters path depending on what direction character is leaning
+
+get large texture that represents map
+get some sort of hitbox that represents different areas
+
+thing that holds bike up at start that dissapears as we pan away
+
+set up player sprite given information from inventoryManager
+
+customizable mechanics:
+not meant to be realistic, meant to make building fun
+front tooth count and rear tooth cound will affect acceleration and top speed
+lighter components will make the bike lean side to side faster
+heavier components will make the bike skid for longer (decelrate less?)
+goal: large noticable difference in handling between heaviest and lightest bike, 
+   should be able to feel the difference in one or two parts worth of upgrades
+
+Rect.colliderect() and pygame.math.Vector2.collidePoint()
+
+player sprites change based on bike build
