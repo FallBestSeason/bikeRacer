@@ -1,11 +1,24 @@
 current:
+actually implement slider instances into bikeshop
+idk where to put them that will be easy to do math on
+cause putting them in the middle of nowhere is making it a pain in the ass
 
 todo:
 
-races
+credits
 
 figure out atribute system and how it will relate to races
     display attributes of current build on right of screen in bikeshop
+    rough idea: 
+        weight of parts affects skids / turn speed
+            lightweight builds turn in and out really fast and focus on grip
+            heavy builds get more speed boost from skids (?) 
+            wheels have biggest effects
+            smallest difference available should be noticable but BARELY
+            largest difference available should be useable, and should be more
+            desireable for high speed cornering
+        cog ct and chainring ct affect acceleration and top speed
+            directly inversely proportional in some way
 
 figure out system to purchase non-inventory items
     maybe change bikeshop to populate from items instead of from inventory?
@@ -30,29 +43,25 @@ will require restructuring in bikeshop and rewrite of acess methods
 in inventoryManager and bike classes
 
 implement dirty squares in gui screens?
-assuming it will be needed for game screens
+assuming it will be needed for game screens <- lol
+implement dirty squares everywhere
 
 test + fix screen size reactivity
 
 main menu kinda just need a rewrite lmao
 
-fix bug where indexoutofrange if you leave the shop, come back in, select a button
-
 figure out: money and cost of items, add element to items.json?
+    crazy idea: multiple named shop locations that are unlocked
 
 RACE TODO:
-controls:
-a / d to lean over / steer
-w to accelerate
-spacebar to skid (only way to slow down)
-steps bike out sideways and alters path depending on what direction character is leaning
 
-get large texture that represents map
-get some sort of hitbox that represents different areas
+speed boost for going into or leaving skid? for balance?
+    fine tune base values for feel
+    UI
+
+get some sort of hitbox that represents different areas of the map
 
 thing that holds bike up at start that dissapears as we pan away
-
-set up player sprite given information from inventoryManager
 
 customizable mechanics:
 not meant to be realistic, meant to make building fun
@@ -61,7 +70,5 @@ lighter components will make the bike lean side to side faster
 heavier components will make the bike skid for longer (decelrate less?)
 goal: large noticable difference in handling between heaviest and lightest bike, 
    should be able to feel the difference in one or two parts worth of upgrades
-
-Rect.colliderect() and pygame.math.Vector2.collidePoint()
 
 player sprites change based on bike build

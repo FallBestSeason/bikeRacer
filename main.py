@@ -8,6 +8,8 @@ def main():
     #varss
     running = True
     screenSize = (1280, 720)
+    #affects logic!
+    frameRate = 60
 
     #set up pygame
     pygame.init()
@@ -19,6 +21,9 @@ def main():
     #and starting and ending races
     gh = GameHandler(screenSize, pygame, screen)
 
+    #set up clock object to limit game FPS
+    clock = pygame.time.Clock()
+
     while running:
         for event in pygame.event.get():
             running = gh.event(event)
@@ -29,6 +34,8 @@ def main():
 
         #puts frame in memory on screen
         pygame.display.flip()
+
+        clock.tick(60)
 
 if __name__=="__main__":
     main()
