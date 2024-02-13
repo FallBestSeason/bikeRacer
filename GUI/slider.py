@@ -20,14 +20,14 @@ class Slider:
         self.init = init
 
         self.foregroundBox = self.generateForegroundBox(bgRect, padding)
-        self.fillBox = self.generateFillBox(foregroundBox, minVal, maxVal, init)
+        self.fillBox = self.generateFillBox(self.foregroundBox, minVal, maxVal, init)
 
     #returns rect that is smaller than one passed in by amount padding on each side
     def generateForegroundBox(self, rect, padding):
         return Rect(
             rect.left + padding,
             rect.top + padding,
-            rect.width - padding,
+            rect.width - 2 * padding,
             rect.height - padding
         )
 
@@ -35,7 +35,7 @@ class Slider:
     def generateFillBox(self, rect, minVal, maxVal, val):
         return Rect(
             rect.left, rect.top,
-            ((rect.right - rect.width) * val) // (max - min),
+            rect.width * ((val - minVal) / (maxVal - minVal)),
             rect.height
         )
 

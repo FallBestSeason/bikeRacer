@@ -27,8 +27,8 @@ RACE (CONTROLS):
 you move the character forward by pressing W
 lean side to side with the A and D keys
 press SPACE to enter a skid, which will behave differently based on what direction
-you are leaning when you press space.
-Leaning, skidding, and accelerating all have inertia
+you are leaning when you press space. (akira slide that thang)
+Leaning, skidding, and accelerating all have inertia systems.
 
 I am making this game to get better at coding. 
 The goal of this project is to prove that I can function as a full-stack dev on

@@ -56,6 +56,15 @@ class BikeShop:
 
         #set up sliders for bike build stats
         self.sliderBgRect = (850, 100, 400, 300)
+        #28px padding to top of third (at least)
+        #10px padding to each side
+        #with up to 62 before intersecting
+        #(860, 128, 380, 62)
+        self.sliders = [
+            Slider(Rect(860, 124, 380, 62), 10, 10, 30, 20),
+            Slider(Rect(860, 224, 380, 62), 10, 0, 6, 4),
+            Slider(Rect(860, 324, 380, 62), 10, 0.0, 1.0, 0.3)
+        ]
         
         
     #draws all elements of class to backside (called each tick)
@@ -69,6 +78,10 @@ class BikeShop:
         self.sliderLabelImage = pygame.image.load(f"{self.resPath}\\bikeShopSliderLabels.png")
         self.sliderLabelImage = pygame.transform.scale(self.sliderLabelImage, (400, 300))
         screen.blit(self.sliderLabelImage, self.sliderBgRect)
+        
+        #draws each slider
+        for slider in self.sliders:
+            slider.draw(pygame, screen)
 
         #draws nav buttons
         for button in self.navButtons:

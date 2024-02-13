@@ -55,6 +55,8 @@ figure out: money and cost of items, add element to items.json?
 
 RACE TODO:
 
+akira slide particles on skid
+
 speed boost for going into or leaving skid? for balance?
     fine tune base values for feel
     UI
