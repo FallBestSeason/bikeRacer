@@ -4,6 +4,7 @@ import os, sys
 current_dir = os.path.dirname(__file__)
 sys.path.append(current_dir)
 from button import Button
+from slider import Slider
 from Inventory.inventoryManager import InventoryManager
 
 class BikeShop:
@@ -17,6 +18,12 @@ class BikeShop:
     FONT_COLOR = (0, 0, 0)
     BG_COLOR = (80, 80, 80)
     NAV_BUTTON_SIZE = (150, 50)
+    #Strings for text elements. may be refactored into textures later
+    BUTTON_STRINGS = ["cockpit", "saddle", "drivetrain", "wheels", "frame"]
+    SECONDARY_OPTIONS = [["stem", "bar", "bar tape"], ["saddle", "seatpost"], 
+                         ["crankset", "chainring", "chain", "pedals"], 
+                         ["cog", "hubs", "rims", "tires"], ["frame"]]
+    NAV_STRINGS = ["BACK TO MENU", "GO RACE!"]
 
     #boolean control vars for branching menu state
     isOpen = [False, False, False, False, False]
@@ -27,35 +34,29 @@ class BikeShop:
     tertiaryButtons = []
     navButtons = []
 
-    #Strings for text elements. may be refactored into textures later
-    BUTTON_STRINGS = ["cockpit", "saddle", "drivetrain", "wheels", "frame"]
-    SECONDARY_OPTIONS = [["stem", "bar", "bar tape"], ["saddle", "seatpost"], 
-                         ["crankset", "chainring", "chain", "pedals"], 
-                         ["cog", "hubs", "rims", "tires"], ["frame"]]
-    NAV_STRINGS = ["BACK TO MENU", "GO RACE!"]
-
     def __init__(self, screenSize):
         #gets resouce frolder set up 
         currentDir = os.path.dirname(__file__)
         self.resPath = os.path.join(currentDir, "res\\")
-
         #import screensize from method
         self.screenSize = screenSize
-
         #clears button arrays
         self.buttons = []
-
         #set up lower stripe that acts as background for buttons
         lowerBgHeight = screenSize[1] // 5
         self.lowerBg = Rect(0, lowerBgHeight * 4, screenSize[0], lowerBgHeight)
 
+        #generates lower main buttons
         self.generateNavButtons()
-
         #generates rects and objects for buttons
         self.generatePrimaryButtons()
 
         #sets up inventory manager
         self.inv = InventoryManager()
+
+        #set up sliders for bike build stats
+        self.sliderBgRect = (850, 100, 400, 300)
+        
         
     #draws all elements of class to backside (called each tick)
     def draw(self, pygame, screen):
@@ -64,23 +65,25 @@ class BikeShop:
         #draws bike visualization that sits center screen
         self.drawBikeVisualization(pygame, screen)
 
+        #draws background for sliders
+        self.sliderLabelImage = pygame.image.load(f"{self.resPath}\\bikeShopSliderLabels.png")
+        self.sliderLabelImage = pygame.transform.scale(self.sliderLabelImage, (400, 300))
+        screen.blit(self.sliderLabelImage, self.sliderBgRect)
+
         #draws nav buttons
         for button in self.navButtons:
             button.draw(pygame, screen)
 
         #draw lower bar buttons sit on
         pygame.draw.rect(screen, self.LOWERBG_COLOR, self.lowerBg)
-
         #draws each button in list
         for button in self.buttons:
             button.draw(pygame, screen)
-
         #draw sub buttons if state requires
         for bool in self.isOpen:
             if bool:
                 for button in self.secondaryButtons:
                     button.draw(pygame, screen)
-
         #draw sub-sub-buttons if nessecary
         for button in self.tertiaryButtons:
             button.draw(pygame, screen)
@@ -94,7 +97,7 @@ class BikeShop:
                 currentImage = pygame.image.load(f"{self.resPath}{namedItem.get("imagePath")}")
                 currentImage = pygame.transform.scale(currentImage, (800, 800))
                 imageRect = currentImage.get_rect()
-                imageRect[0] += 60
+                imageRect[0] += 10
                 imageRect[1] -= 50
                 screen.blit(currentImage, imageRect)
 
@@ -168,9 +171,7 @@ class BikeShop:
         else:
             #buttons go down!
             buttonYDirection = 1
-
         #if button is the last one
-        #NOT how we should be doing this lmao
         if self.isOpen[4]:
             #buttons go to the left!
             buttonXDirection = -1 

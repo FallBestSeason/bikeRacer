@@ -1,0 +1,50 @@
+import pygame
+from pygame import Rect
+import os, sys
+current_dir = os.path.dirname(__file__)
+sys.path.append(current_dir)
+
+#abstract instance module
+#used to represent slider in GUI class
+class Slider:
+    #colors
+    BG_COLOR = (120, 120, 120)
+    FG_COLOR = (80, 80, 80)
+    FILL_COLOR = (0, 80, 100)
+
+    def __init__(self, bgRect, padding, minVal, maxVal, init):
+        self.bgRect = bgRect
+        self.padding = padding
+        self.min = minVal
+        self.max = maxVal
+        self.init = init
+
+        self.foregroundBox = self.generateForegroundBox(bgRect, padding)
+        self.fillBox = self.generateFillBox(foregroundBox, minVal, maxVal, init)
+
+    #returns rect that is smaller than one passed in by amount padding on each side
+    def generateForegroundBox(self, rect, padding):
+        return Rect(
+            rect.left + padding,
+            rect.top + padding,
+            rect.width - padding,
+            rect.height - padding
+        )
+
+    #returns rect that is the same % amount of passed in rect as val is in range
+    def generateFillBox(self, rect, minVal, maxVal, val):
+        return Rect(
+            rect.left, rect.top,
+            ((rect.right - rect.width) * val) // (max - min),
+            rect.height
+        )
+
+    #update held value in slider
+    def update(self, val):
+        self.fillBox = self.generateFillBox(self.foregroundBox, self.min, self.max, val)
+
+    #draws all boxes to screen
+    def draw(self, pygame, screen):
+        pygame.draw.rect(screen, self.BG_COLOR, self.bgRect)
+        pygame.draw.rect(screen, self.FG_COLOR, self.foregroundBox)
+        pygame.draw.rect(screen, self.FILL_COLOR, self.fillBox)

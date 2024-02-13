@@ -11,10 +11,8 @@ class RaceInstance:
     #constants for UI stuff
 
     #constants for race stuff
-    #size in px player sprite gets scaled to
-    PLAYER_SIZE = (45, 45)
     #max speed and accel for player
-    PLAYER_SPEED_MAX = 4
+    PLAYER_SPEED_MAX = 6
     PLAYER_ACCELERATION = 1
     PLAYER_DECELERATION = -0.01
     SKID_DECEL = -0.03
@@ -25,7 +23,8 @@ class RaceInstance:
     LARGE_LEAN_RANGE = (75, 125)
     #offset amounts for rotating player
     PLAYER_SMALL_DELTA_ROTATION = 1
-    PLAYER_LARGE_DELTA_ROTATION = 2
+    PLAYER_LARGE_DELTA_ROTATION = 1.5
+    PLAYER_SKID_ROTATION = 70
     #paths for player sprites
     PLAYER_SPRITE_PATH_CENTER = "\\player\\player0.png"
     PLAYER_SPRITE_PATH_SMALL = "\\player\\player1.png"
@@ -91,9 +90,9 @@ class RaceInstance:
             self.skidding = False
             self.skidNotStarted = True
             if self.skiddingLeft:
-                self.playerRotation += 90
+                self.playerRotation += self.PLAYER_SKID_ROTATION
             else:
-                self.playerRotation -= 90
+                self.playerRotation -= self.PLAYER_SKID_ROTATION
 
     def draw(self, pygame, screen):
         #do stuff based on state from checking keys
@@ -162,10 +161,10 @@ class RaceInstance:
             self.playerSpeed = 0
 
         #rotate player sprite 
-        self.rotatedSprite = pygame.transform.rotate(playerSprite, self.playerRotation)
+        rotatedSprite = pygame.transform.rotate(playerSprite, self.playerRotation)
         #center it on the existing sprite
-        self.rotatedSprite.get_rect().center = playerSprite.get_rect().center
-        playerSprite = self.rotatedSprite
+        rotatedSprite.get_rect().center = playerSprite.get_rect().center
+        playerSprite = rotatedSprite
             
         #update camera with difference in x, y given rotation and speed
         self.cameraDelta = getCameraDelta(self.camera[0], self.camera[1], self.playerRotation, self.playerSpeed)
@@ -181,12 +180,11 @@ class RaceInstance:
         #draw bg to screen
         screen.blit(self.bgImage, self.bgRect)
 
-        #scale player sprite to correct size
-        playerSprite = pygame.transform.scale(playerSprite, self.PLAYER_SIZE)
         #set up player rect to be centered on screen
         playerRect = ((self.screenSize[0] // 2) - (playerSprite.get_rect().left // 2),
                       (self.screenSize[1] // 2) - (playerSprite.get_rect().top // 2),
-                      self.PLAYER_SIZE[0], self.PLAYER_SIZE[1])
+                      #self.PLAYER_SIZE[0], self.PLAYER_SIZE[1])
+                       playerSprite.get_rect().width, playerSprite.get_rect().height)
         #draw player sprite to screen
         screen.blit(playerSprite, playerRect)
 
