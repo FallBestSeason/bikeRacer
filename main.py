@@ -21,15 +21,8 @@ def main():
 
     while running:
         for event in pygame.event.get():
-            #quits game
-            if event.type == pygame.QUIT:
-                running = False
-            
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    running = gh.clicked(pygame.mouse.get_pos())
+            running = gh.event(event)
                         
-            #do keeb stuff here
         #game tick 
         #draws current UI
         gh.draw()
