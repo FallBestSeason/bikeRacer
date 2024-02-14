@@ -15,7 +15,6 @@ class Bike:
         "hubs": "formula track",
         "rims": "alex DH19",
         "tires": "gatorskins",
-        "cog": "",
         "frame": "big block",
         "chainring": "used alloy chainring",
         "chain": "standard chain",

@@ -7,6 +7,9 @@ todo:
 
 credits
 
+chainring and cog tooth changes
+    crazy idea: this affects weight
+
 figure out atribute system and how it will relate to races
     display attributes of current build on right of screen in bikeshop
     rough idea: 

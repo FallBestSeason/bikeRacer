@@ -22,7 +22,7 @@ class BikeShop:
     BUTTON_STRINGS = ["cockpit", "saddle", "drivetrain", "wheels", "frame"]
     SECONDARY_OPTIONS = [["stem", "bar", "bar tape"], ["saddle", "seatpost"], 
                          ["crankset", "chainring", "chain", "pedals"], 
-                         ["cog", "hubs", "rims", "tires"], ["frame"]]
+                         ["hubs", "rims", "tires"], ["frame"]]
     NAV_STRINGS = ["BACK TO MENU", "GO RACE!"]
 
     #boolean control vars for branching menu state
@@ -61,11 +61,10 @@ class BikeShop:
         #with up to 62 before intersecting
         #(860, 128, 380, 62)
         self.sliders = [
-            Slider(Rect(860, 124, 380, 62), 10, 10, 30, 20),
-            Slider(Rect(860, 224, 380, 62), 10, 0, 6, 4),
-            Slider(Rect(860, 324, 380, 62), 10, 0.0, 1.0, 0.3)
+            Slider(Rect(860, 124, 380, 62), 10, 10, 30, 0),
+            Slider(Rect(860, 224, 380, 62), 10, 0, 6, 0),
+            Slider(Rect(860, 324, 380, 62), 10, 0.0, 1.0, 0)
         ]
-        
         
     #draws all elements of class to backside (called each tick)
     def draw(self, pygame, screen):
@@ -79,7 +78,8 @@ class BikeShop:
         self.sliderLabelImage = pygame.transform.scale(self.sliderLabelImage, (400, 300))
         screen.blit(self.sliderLabelImage, self.sliderBgRect)
         
-        #draws each slider
+        #updates, then draws each slider
+        self.updateSliders(self.sliders)
         for slider in self.sliders:
             slider.draw(pygame, screen)
 
@@ -113,6 +113,23 @@ class BikeShop:
                 imageRect[0] += 10
                 imageRect[1] -= 50
                 screen.blit(currentImage, imageRect)
+
+    #updates data in slider objects given player setup
+    def updateSliders(self, sliders):
+        #sums weight of all items in dict
+        weight = 0
+        for key, value in self.inv.bike.getDict().items():
+            if value != '':
+                currentItem = self.inv.getItem(value)
+                currentWeight = currentItem.get("weight")
+                weight += currentWeight
+        #updates slider with weight
+        sliders[0].update(weight)
+
+        #todo calculate top speed and acceleration 
+        sliders[1].update(4)
+        sliders[2].update(0.3)
+        
 
     #populates array of nav button objects
     def generateNavButtons(self):
