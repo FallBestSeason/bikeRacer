@@ -1,14 +1,21 @@
 current:
-add attributes to items and inventory,
+refactor to weight given as number
 add logic and hanlding for filling bars with information
 add function in inventoryManager needs updated with all new attributes
+chainring and cog tooth changes
+    crazy idea: this affects weight
 
 todo:
 
 credits
 
-chainring and cog tooth changes
-    crazy idea: this affects weight
+redraw player sprite now that res is doubled
+
+button clicked twice in shop closes button
+
+little scale in bikeshop that displays bike's weight
+
+update items dict with inventory contents
 
 figure out atribute system and how it will relate to races
     display attributes of current build on right of screen in bikeshop

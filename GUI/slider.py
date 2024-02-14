@@ -28,7 +28,7 @@ class Slider:
             rect.left + padding,
             rect.top + padding,
             rect.width - 2 * padding,
-            rect.height - padding
+            rect.height - 2 * padding
         )
 
     #returns rect that is the same % amount of passed in rect as val is in range

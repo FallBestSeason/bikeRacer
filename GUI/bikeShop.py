@@ -16,13 +16,13 @@ class BikeShop:
     LOWERBG_COLOR = (0, 80, 100)
     BUTTON_COLOR = (120, 120, 120)
     FONT_COLOR = (0, 0, 0)
-    BG_COLOR = (80, 80, 80)
-    NAV_BUTTON_SIZE = (150, 50)
+    BG_COLOR = (100, 100, 100)
+    NAV_BUTTON_SIZE = (150, 45)
     #Strings for text elements. may be refactored into textures later
-    BUTTON_STRINGS = ["cockpit", "saddle", "drivetrain", "wheels", "frame"]
-    SECONDARY_OPTIONS = [["stem", "bar", "bar tape"], ["saddle", "seatpost"], 
+    BUTTON_STRINGS = ["frame & gearing", "saddle", "drivetrain", "wheels", "cockpit"]
+    SECONDARY_OPTIONS = [["frame", "front gearing", "rear gearing"], ["saddle", "seatpost"], 
                          ["crankset", "chainring", "chain", "pedals"], 
-                         ["hubs", "rims", "tires"], ["frame"]]
+                         ["hubs", "rims", "tires"], ["stem", "bar", "bar tape"]]
     NAV_STRINGS = ["BACK TO MENU", "GO RACE!"]
 
     #boolean control vars for branching menu state
@@ -55,15 +55,10 @@ class BikeShop:
         self.inv = InventoryManager()
 
         #set up sliders for bike build stats
-        self.sliderBgRect = (850, 100, 400, 300)
-        #28px padding to top of third (at least)
-        #10px padding to each side
-        #with up to 62 before intersecting
-        #(860, 128, 380, 62)
+        self.sliderBgRect = (780, -80, 400, 300)
         self.sliders = [
-            Slider(Rect(860, 124, 380, 62), 10, 10, 30, 0),
-            Slider(Rect(860, 224, 380, 62), 10, 0, 6, 0),
-            Slider(Rect(860, 324, 380, 62), 10, 0.0, 1.0, 0)
+            Slider(Rect(790, 400, 480, 62), 0, 2.43, 3.87, 0),
+            Slider(Rect(790, 504, 480, 62), 0, -3.87, -2.43, 0)
         ]
         
     #draws all elements of class to backside (called each tick)
@@ -74,8 +69,9 @@ class BikeShop:
         self.drawBikeVisualization(pygame, screen)
 
         #draws background for sliders
-        self.sliderLabelImage = pygame.image.load(f"{self.resPath}\\bikeShopSliderLabels.png")
-        self.sliderLabelImage = pygame.transform.scale(self.sliderLabelImage, (400, 300))
+        #self.sliderLabelImage = pygame.image.load(f"{self.resPath}\\bikeShopSliderLabels.png")
+        self.sliderLabelImage = pygame.image.load(f"{self.resPath}\\clipboard.png")
+        self.sliderLabelImage = pygame.transform.scale(self.sliderLabelImage, (500, 666))
         screen.blit(self.sliderLabelImage, self.sliderBgRect)
         
         #updates, then draws each slider
@@ -107,12 +103,14 @@ class BikeShop:
         for key, value in self.inv.bike.getDict().items():
             if value != '':
                 namedItem = self.inv.getItem(value)
-                currentImage = pygame.image.load(f"{self.resPath}{namedItem.get("imagePath")}")
-                currentImage = pygame.transform.scale(currentImage, (800, 800))
-                imageRect = currentImage.get_rect()
-                imageRect[0] += 10
-                imageRect[1] -= 50
-                screen.blit(currentImage, imageRect)
+                #make sure clicked item isn't a gearing, which have no path
+                if "gearing" not in namedItem.get("category"):
+                    currentImage = pygame.image.load(f"{self.resPath}{namedItem.get("imagePath")}")
+                    currentImage = pygame.transform.scale(currentImage, (800, 800))
+                    imageRect = currentImage.get_rect()
+                    imageRect[0] += -5
+                    imageRect[1] += 0
+                    screen.blit(currentImage, imageRect)
 
     #updates data in slider objects given player setup
     def updateSliders(self, sliders):
@@ -127,8 +125,14 @@ class BikeShop:
         sliders[0].update(weight)
 
         #todo calculate top speed and acceleration 
-        sliders[1].update(4)
-        sliders[2].update(0.3)
+        ratio = 0
+        for key, value in self.inv.bike.getDict().items():
+            if value != '':
+                currentFront = float(self.inv.bike.getPartName("front gearing"))
+                currentRear = float(self.inv.bike.getPartName("rear gearing"))
+                ratio = currentFront / currentRear
+        sliders[0].update(ratio)
+        sliders[1].update(-ratio)
         
 
     #populates array of nav button objects
@@ -215,9 +219,9 @@ class BikeShop:
             buttonRect = Rect(x, y, w, h)
             if buttonXDirection == -1:
                 buttonRect[0] -= 2 * (self.buttonWidth + self.BUTTON_SPACING)
-            self.tertiaryButtons.append(Button(buttonRect, self.FONT_SIZE, self.FONT_SPACING,
-                                                self.BUTTON_COLOR, self.FONT_COLOR, 
-                                                item.get("name")))
+            self.tertiaryButtons.append(Button(
+                buttonRect, self.FONT_SIZE, self.FONT_SPACING,
+                self.BUTTON_COLOR, self.FONT_COLOR, item.get("name")))
             if buttonYDirection == 1:
                 buttonOffset += self.SECONDARY_BUTTON_HEIGHT + self.BUTTON_SPACING
             else:

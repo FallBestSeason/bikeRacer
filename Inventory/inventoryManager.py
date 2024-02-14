@@ -20,6 +20,8 @@ class Bike:
         "chain": "standard chain",
         "crankset": "used alloy crankset",
         "pedals": "flats",
+        "front gearing": "46",
+        "rear gearing": "17"
     }
 
     def setPart(self, part):
