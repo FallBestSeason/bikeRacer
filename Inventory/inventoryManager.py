@@ -44,8 +44,6 @@ class InventoryManager:
 
         with open(self.itemFilePath, "r") as infile:
             self.allItems = json.load(infile)
-        #self.addItem(self.getAllItemByName("big block subframe"))
-        #self.addItem(self.getAllItemByName("thunderdome subframe"))
 
         #sets up current bike object for current config
         self.bike = Bike()
@@ -54,19 +52,6 @@ class InventoryManager:
         #reads dictionary data from json file into self.items
         with open(self.jsonFilePath, "r") as infile:
             self.items = json.load(infile)
-
-        #todo remove once not needed for testing
-        """
-        self.items = [{
-            "category": "frame",
-            "name": "big block",
-            "imagePath": "parts\\frame\\bigBlock.png"
-            }, {
-            "category": "frame", 
-            "name": "thunderdome", 
-            "imagePath": "\\parts\\frame\\thunderdome.png"
-            }]
-        """
 
     #writes current content of self.items to json file
     def write(self):

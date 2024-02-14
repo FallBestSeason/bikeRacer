@@ -1,7 +1,7 @@
 current:
-actually implement slider instances into bikeshop
-idk where to put them that will be easy to do math on
-cause putting them in the middle of nowhere is making it a pain in the ass
+add attributes to items and inventory,
+add logic and hanlding for filling bars with information
+add function in inventoryManager needs updated with all new attributes
 
 todo:
 

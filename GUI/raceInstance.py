@@ -24,7 +24,7 @@ class RaceInstance:
     #offset amounts for rotating player
     PLAYER_SMALL_DELTA_ROTATION = 1
     PLAYER_LARGE_DELTA_ROTATION = 1.5
-    PLAYER_SKID_ROTATION = 70
+    PLAYER_SKID_ROTATION = 90
     #paths for player sprites
     PLAYER_SPRITE_PATH_CENTER = "\\player\\player0.png"
     PLAYER_SPRITE_PATH_SMALL = "\\player\\player1.png"
