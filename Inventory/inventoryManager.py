@@ -50,7 +50,7 @@ class InventoryManager:
 
     def updateItems(self):
         #reads dictionary data from json file into self.items
-        with open(self.jsonFilePath, "r") as infile:
+        with open(self.itemFilePath, "r") as infile:
             self.items = json.load(infile)
 
     #writes current content of self.items to json file
@@ -112,3 +112,14 @@ class InventoryManager:
         for item in self.items:
             if f"{frameName} subframe" == item.get("name"):
                 return item
+
+    def getWeight(self):
+        weight = 0
+        bikeDict = self.bike.getDict()
+        for name in bikeDict:
+            if name != '':
+                itemName = bikeDict.get(name)
+                for item in self.items:
+                    if item.get("name") == itemName:
+                        weight += item.get("weight")
+        return round(weight, 2)

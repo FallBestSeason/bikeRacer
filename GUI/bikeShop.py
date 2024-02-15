@@ -67,7 +67,13 @@ class BikeShop:
         ]
         self.chainRingFont = pygame.font.Font(self.resPath+"font.ttf", 40)
         self.renderedChainRingTexts = []
-        
+
+        #set up scale and scale elements
+        self.scaleRect = (340, 7, 200, 200)
+        self.scaleTextRect = (396, 64, 100, 100)
+        self.scaleFont = pygame.font.Font(self.resPath+"font.ttf", 30)
+        self.renderedScaleText = ""
+
     #draws all elements of class to backside (called each tick)
     def draw(self, pygame, screen):
         screen.fill(self.BG_COLOR)
@@ -75,10 +81,14 @@ class BikeShop:
         #draws bike visualization that sits center screen
         self.drawBikeVisualization(pygame, screen)
 
-        #draws clipboard to screen
-        self.sliderLabelImage = pygame.image.load(f"{self.resPath}\\clipboard.png")
-        self.sliderLabelImage = pygame.transform.scale(self.sliderLabelImage, (500, 666))
-        screen.blit(self.sliderLabelImage, self.clipboardRect)
+        #draws scale background to screen
+        scaleImage = pygame.image.load(f"{self.resPath}\\scale.png")
+        screen.blit(scaleImage, self.scaleRect)
+
+        #draws clipboard background to screen
+        sliderLabelImage = pygame.image.load(f"{self.resPath}\\clipboard.png")
+        sliderLabelImage = pygame.transform.scale(sliderLabelImage, (500, 666))
+        screen.blit(sliderLabelImage, self.clipboardRect)
         
         #updates, then draws clipboard elements
         self.updateClipboard(self.sliders)
@@ -86,6 +96,7 @@ class BikeShop:
             screen.blit(renderedText, self.chainRingTextRects[i])
         for slider in self.sliders:
             slider.draw(pygame, screen)
+        screen.blit(self.renderedScaleText, self.scaleTextRect)
 
         #draws nav buttons
         for button in self.navButtons:
@@ -124,15 +135,9 @@ class BikeShop:
     def updateClipboard(self, sliders):
         #reset important values
         self.renderedChainRingTexts = []
-        weight = 0
 
-        #sums weight of all items in dict
-        for key, value in self.inv.bike.getDict().items():
-            if value != '':
-                currentItem = self.inv.getItem(value)
-                currentWeight = currentItem.get("weight")
-                weight += currentWeight
-        #todo put it on screen
+        weight = self.inv.getWeight()
+        self.renderedScaleText = self.scaleFont.render(str(weight), True, (0, 0, 0))
 
         #get info from current bike setup
         currentTeeth = [0, 0]
@@ -208,22 +213,17 @@ class BikeShop:
         #ind in secondarybuttons
         self.tertiaryButtons = []
         buttonOffset = 0
-        #1 for positive -1 for negative (weird! screen coords are top left)
         buttonYDirection = 0
         buttonXDirection = 1
-        #get list of inventory items given a category
         items = self.inv.getAllInCat(self.secondaryButtons[ind].string)
 
-        #if height of upcoming buttons is greater than distance between bar and top of current button
+       #check if buttons fit screen going down
         if (self.SECONDARY_BUTTON_HEIGHT + buttonOffset) * len(items) > self.lowerBg[1] - self.secondaryButtons[ind].rect[1]:
             #buttons go up!
             buttonYDirection = -1
-        else:
-            #buttons go down!
+        else: #buttons go down!
             buttonYDirection = 1
-        #if button is the last one
-        if self.isOpen[4]:
-            #buttons go to the left!
+        if self.isOpen[4]: #if last button, go left
             buttonXDirection = -1 
 
         #calculate position of -each button and put it into tertiaryButtons as a rect (foreach item in list in category)

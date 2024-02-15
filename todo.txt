@@ -1,6 +1,6 @@
 current:
+lbs kgs label and switch on scale
 
-button clicked twice in shop closes button
 
 todo:
 
@@ -75,3 +75,7 @@ goal: large noticable difference in handling between heaviest and lightest bike,
    should be able to feel the difference in one or two parts worth of upgrades
 
 player sprites change based on bike build
+
+rewrite of bikeshop to get rid of lots of hard coded pixel values
+
+REWRITE def getWeight(self): IN INVENTORYMANAGER
