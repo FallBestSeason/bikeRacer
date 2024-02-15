@@ -1,15 +1,10 @@
 current:
-add function in inventoryManager needs updated with all new attributes
-chainring and cog tooth changes
-    crazy idea: this affects weight
+
+button clicked twice in shop closes button
 
 todo:
 
 credits
-
-redraw player sprite now that res is doubled
-
-button clicked twice in shop closes button
 
 little scale in bikeshop that displays bike's weight
 
@@ -70,8 +65,6 @@ speed boost for going into or leaving skid? for balance?
     UI
 
 get some sort of hitbox that represents different areas of the map
-
-thing that holds bike up at start that dissapears as we pan away
 
 customizable mechanics:
 not meant to be realistic, meant to make building fun

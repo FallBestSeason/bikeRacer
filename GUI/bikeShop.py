@@ -27,6 +27,7 @@ class BikeShop:
 
     #boolean control vars for branching menu state
     isOpen = [False, False, False, False, False]
+    clickedButton = ""
 
     #other mutable vars
     buttons = []
@@ -256,7 +257,12 @@ class BikeShop:
                 self.tertiaryButtons = []
                 self.isOpen = [False, False, False, False, False]
                 self.isOpen[i] = True
-                self.generateSecondaryButtons(i)
+                if self.clickedButton == button:
+                    self.secondaryButtons = []
+                else:
+                    self.generateSecondaryButtons(i)
+                    self.clickedButton = ""
+                self.clickedButton = button
 
         #if secondary button clicked, generate tertiary buttons
         #generation uses location of button clicked

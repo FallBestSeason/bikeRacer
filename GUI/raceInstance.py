@@ -150,9 +150,10 @@ class RaceInstance:
             self.playerSpeed += self.SKID_DECEL
             #change sprite to skid
             playerSprite = pygame.image.load(self.resPath + self.PLAYER_SPRITE_PATH_SKID)
+            playerSprite = pygame.transform.flip(playerSprite, False, True)
             if not self.skiddingLeft:
                 #flips sprite for right skids
-                playerSprite = pygame.transform.flip(playerSprite, True, True)
+                playerSprite = pygame.transform.flip(playerSprite, True, False)
 
         #speed limit check
         if self.playerSpeed > self.PLAYER_SPEED_MAX:
