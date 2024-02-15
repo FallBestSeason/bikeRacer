@@ -54,12 +54,18 @@ class BikeShop:
         #sets up inventory manager
         self.inv = InventoryManager()
 
-        #set up sliders for bike build stats
-        self.sliderBgRect = (780, -80, 400, 300)
+        #set up sliders and clipboard elements
+        self.clipboardRect = (780, -80, 400, 300)
         self.sliders = [
             Slider(Rect(790, 400, 480, 62), 0, 2.43, 3.87, 0),
             Slider(Rect(790, 504, 480, 62), 0, -3.87, -2.43, 0)
         ]
+        self.chainRingTextRects = [
+            (860, 185, 100, 100), 
+            (1130, 185, 100, 100)
+        ]
+        self.chainRingFont = pygame.font.Font(self.resPath+"font.ttf", 40)
+        self.renderedChainRingTexts = []
         
     #draws all elements of class to backside (called each tick)
     def draw(self, pygame, screen):
@@ -68,14 +74,15 @@ class BikeShop:
         #draws bike visualization that sits center screen
         self.drawBikeVisualization(pygame, screen)
 
-        #draws background for sliders
-        #self.sliderLabelImage = pygame.image.load(f"{self.resPath}\\bikeShopSliderLabels.png")
+        #draws clipboard to screen
         self.sliderLabelImage = pygame.image.load(f"{self.resPath}\\clipboard.png")
         self.sliderLabelImage = pygame.transform.scale(self.sliderLabelImage, (500, 666))
-        screen.blit(self.sliderLabelImage, self.sliderBgRect)
+        screen.blit(self.sliderLabelImage, self.clipboardRect)
         
-        #updates, then draws each slider
-        self.updateSliders(self.sliders)
+        #updates, then draws clipboard elements
+        self.updateClipboard(self.sliders)
+        for i, renderedText in enumerate(self.renderedChainRingTexts):
+            screen.blit(renderedText, self.chainRingTextRects[i])
         for slider in self.sliders:
             slider.draw(pygame, screen)
 
@@ -113,27 +120,35 @@ class BikeShop:
                     screen.blit(currentImage, imageRect)
 
     #updates data in slider objects given player setup
-    def updateSliders(self, sliders):
-        #sums weight of all items in dict
+    def updateClipboard(self, sliders):
+        #reset important values
+        self.renderedChainRingTexts = []
         weight = 0
+
+        #sums weight of all items in dict
         for key, value in self.inv.bike.getDict().items():
             if value != '':
                 currentItem = self.inv.getItem(value)
                 currentWeight = currentItem.get("weight")
                 weight += currentWeight
-        #updates slider with weight
-        sliders[0].update(weight)
+        #todo put it on screen
 
-        #todo calculate top speed and acceleration 
+        #get info from current bike setup
+        currentTeeth = [0, 0]
         ratio = 0
         for key, value in self.inv.bike.getDict().items():
             if value != '':
-                currentFront = float(self.inv.bike.getPartName("front gearing"))
-                currentRear = float(self.inv.bike.getPartName("rear gearing"))
-                ratio = currentFront / currentRear
+                currentTeeth[0] = float(self.inv.bike.getPartName("front gearing"))
+                currentTeeth[1]  = float(self.inv.bike.getPartName("rear gearing"))
+                ratio = currentTeeth[0] / currentTeeth[1]
+
+        #update sliders at bottom of clipboard
         sliders[0].update(ratio)
         sliders[1].update(-ratio)
-        
+
+        #update text in chainring blanks
+        self.renderedChainRingTexts.append(self.chainRingFont.render(str(int(currentTeeth[0])), True, (0, 0, 0)))
+        self.renderedChainRingTexts.append(self.chainRingFont.render(str(int(currentTeeth[1])), True, (0, 0, 0)))
 
     #populates array of nav button objects
     def generateNavButtons(self):

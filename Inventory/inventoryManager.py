@@ -33,7 +33,6 @@ class Bike:
     def getDict(self):
         return self.bikeItems
         
-
 class InventoryManager:
 
     jsonFilePath = "Inventory/inventory.json"
@@ -67,10 +66,11 @@ class InventoryManager:
         self.updateItems()
 
     #appends item to self.items, writes file with items
-    def addItem(self, cat, name, path):
+    def addItem(self, cat, name, weight, path):
         self.items.append({
             "category": cat,
             "name": name,
+            "weight": weight,
             "filePath": path
         })
         self.write()

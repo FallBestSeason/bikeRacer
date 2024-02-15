@@ -1,6 +1,4 @@
 current:
-refactor to weight given as number
-add logic and hanlding for filling bars with information
 add function in inventoryManager needs updated with all new attributes
 chainring and cog tooth changes
     crazy idea: this affects weight
