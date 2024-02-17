@@ -4,7 +4,7 @@ import math
 import os, sys
 current_dir = os.path.dirname(__file__)
 sys.path.append(current_dir)
-from particle import Particle
+from particle import ParticleNode
 from inventory.inventoryManager import InventoryManager
 
 class RaceInstance:
@@ -21,7 +21,7 @@ class RaceInstance:
     PLAYER_DECELERATION = -0.05
     SKID_DECEL = -0.03
     #rate at which playerLeanAmount is changed
-    PLAYER_LEAN_DELTA = 4
+    PLAYER_LEAN_DELTA = 4.5
     SMALL_LEAN_RANGE = (25, 75)
     LARGE_LEAN_RANGE = (75, 125)
     #offset amounts for rotating player
@@ -72,6 +72,8 @@ class RaceInstance:
         #set up background image
         self.bgImage = pygame.image.load(self.resPath + self.BG_SPRITE_PATH)
 
+        self.particleNode = ParticleNode(5, 300)
+
     #handles key presses
     def keyDown(self, event):
         if event.key == pygame.K_w: #w pressed
@@ -117,6 +119,9 @@ class RaceInstance:
         #draw background to screen
         screen.blit(self.bgImage, self.bgRect)
 
+        #draw particles to screen
+        self.particleNode.draw(pygame, screen, (200, 200))
+
         #draw player to screen
         screen.blit(self.playerSprite, self.playerRect)
 
@@ -126,11 +131,11 @@ class RaceInstance:
             renderedLine = self.debugFont.render(line, True, (0, 0, 0))
             debugRect = (0, debugOffset, 100, 10)
             screen.blit(renderedLine, debugRect)
-            debugOffset += 10
+            debugOffset += 12
             
     def updateDebug(self):
         self.debugStrings = []
-        self.debugStrings.append(f"speed: {self.playerSpeed}")
+        self.debugStrings.append(f"speed: {round(self.playerSpeed, 2)}")
         self.debugStrings.append(f"boostTimer: {self.skidBoostTimer}")
 
     #updates player rotation and sprite given the current state vars
