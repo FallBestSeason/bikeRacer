@@ -16,7 +16,7 @@ class Button:
         self.textRect = self.generateTextRect(rect, fontSpacing, fontSize)
 
         #set up resource path for getting files
-        resPath = os.path.join(os.path.dirname(__file__), "res\\")
+        resPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "res\\")
 
         #set up font object for rendering text
         buttonFont = pygame.font.Font(resPath+"font.ttf", fontSize)

@@ -82,11 +82,11 @@ class BikeShop:
         self.drawBikeVisualization(pygame, screen)
 
         #draws scale background to screen
-        scaleImage = pygame.image.load(f"{self.resPath}\\scale.png")
+        scaleImage = pygame.image.load(f"{self.resPath}\\shop elements\\scale.png")
         screen.blit(scaleImage, self.scaleRect)
 
         #draws clipboard background to screen
-        sliderLabelImage = pygame.image.load(f"{self.resPath}\\clipboard.png")
+        sliderLabelImage = pygame.image.load(f"{self.resPath}\\shop elements\\clipboard.png")
         sliderLabelImage = pygame.transform.scale(sliderLabelImage, (500, 666))
         screen.blit(sliderLabelImage, self.clipboardRect)
         
