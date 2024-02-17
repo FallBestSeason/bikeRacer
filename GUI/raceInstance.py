@@ -9,15 +9,16 @@ from Inventory.inventoryManager import InventoryManager
 
 class RaceInstance:
     #constants for UI stuff
+    ENABLE_DEBUG_MENU = True
 
     #constants for race stuff
     #max speed and accel for player
-    PLAYER_SPEED_MAX = 6
-    PLAYER_ACCELERATION = 1
-    PLAYER_DECELERATION = -0.01
+    PLAYER_SPEED_MAX = 8
+    PLAYER_ACCELERATION = 0.1
+    PLAYER_DECELERATION = -0.05
     SKID_DECEL = -0.03
     #rate at which playerLeanAmount is changed
-    PLAYER_LEAN_DELTA = 2
+    PLAYER_LEAN_DELTA = 4
     #each range represents a state leanAmount can occupy
     SMALL_LEAN_RANGE = (25, 75)
     LARGE_LEAN_RANGE = (75, 125)
@@ -33,12 +34,14 @@ class RaceInstance:
     BG_SPRITE_PATH = "\\maps\\map1.png"
 
     #mutable vars
+    debugStrings = []
+
     #arbitrary number, represents range player can lean in
     playerLeanAmount = 0
     #note: rotation utility turns counterclockwise!
     playerRotation = 0
-    #current player speed
     playerSpeed = 0.0
+    playerSprite = ''
 
     #state of movement
     acceleratingForward = False
@@ -49,13 +52,15 @@ class RaceInstance:
     SkiddingLeft = False
 
     #represents delta x, y to offset background
-    #creates illusion of scrolling world
     camera = (0, 0)
 
     def __init__(self, screenSize):
         #gets resouce frolder set up 
         currentDir = os.path.dirname(__file__)
         self.resPath = os.path.join(currentDir, "res\\")
+
+        #gets debug font initalized
+        self.debugFont = pygame.font.Font(self.resPath+"font.ttf", 10)
 
         #import screensize from method
         self.screenSize = screenSize
@@ -95,6 +100,20 @@ class RaceInstance:
                 self.playerRotation -= self.PLAYER_SKID_ROTATION
 
     def draw(self, pygame, screen):
+        self.updatePlayer()
+        
+        #fill w black
+        screen.fill((0, 0, 0))
+
+        #add camera to background as "offset"
+        self.bgRect = self.bgImage.get_rect()
+        self.bgRect.topleft = self.bgRect.top + self.camera[0], self.bgRect.left + self.camera[1]
+        screen.blit(self.bgImage, self.bgRect)
+
+        screen.blit(self.playerSprite, self.playerRect)
+
+    #updates player rotation and sprite given the current state vars
+    def updatePlayer(self):
         #do stuff based on state from checking keys
         #first, increment or decrement player lean
         if self.leaningRight:
@@ -116,44 +135,40 @@ class RaceInstance:
         #next, if lean is within ranges, rotate + update player sprite
         if self.SMALL_LEAN_RANGE[0] <= self.playerLeanAmount < self.SMALL_LEAN_RANGE[1]:
             #slightly leaned right
-            playerSprite = pygame.image.load(self.resPath + self.PLAYER_SPRITE_PATH_SMALL)
+            self.playerSprite = pygame.image.load(self.resPath + self.PLAYER_SPRITE_PATH_SMALL)
             self.playerRotation -= self.PLAYER_SMALL_DELTA_ROTATION
         elif -self.SMALL_LEAN_RANGE[0] >= self.playerLeanAmount > -self.SMALL_LEAN_RANGE[1]:
             #slightly leaned left
-            playerSprite = pygame.image.load(self.resPath + self.PLAYER_SPRITE_PATH_SMALL)
-            playerSprite = pygame.transform.flip(playerSprite, True, False)
+            self.playerSprite = pygame.image.load(self.resPath + self.PLAYER_SPRITE_PATH_SMALL)
+            self.playerSprite = pygame.transform.flip(self.playerSprite, True, False)
             self.playerRotation += self.PLAYER_SMALL_DELTA_ROTATION
         elif self.LARGE_LEAN_RANGE[0] <= self.playerLeanAmount:
             #full leaned right
-            playerSprite = pygame.image.load(self.resPath + self.PLAYER_SPRITE_PATH_LARGE)
+            self.playerSprite = pygame.image.load(self.resPath + self.PLAYER_SPRITE_PATH_LARGE)
             self.playerRotation -= self.PLAYER_LARGE_DELTA_ROTATION
         elif -self.LARGE_LEAN_RANGE[0] >= self.playerLeanAmount:
             #full leaned left
-            playerSprite = pygame.image.load(self.resPath + self.PLAYER_SPRITE_PATH_LARGE)
-            playerSprite = pygame.transform.flip(playerSprite, True, False)
+            self.playerSprite = pygame.image.load(self.resPath + self.PLAYER_SPRITE_PATH_LARGE)
+            self.playerSprite = pygame.transform.flip(self.playerSprite, True, False)
             self.playerRotation += self.PLAYER_LARGE_DELTA_ROTATION
-        else:
-            #centered 
-            playerSprite = pygame.image.load(self.resPath + self.PLAYER_SPRITE_PATH_CENTER)
+        else: #centered 
+            self.playerSprite = pygame.image.load(self.resPath + self.PLAYER_SPRITE_PATH_CENTER)
 
-        #then, accelerate the player forward if applicable
-        if self.acceleratingForward and not self.skidding:
-            #accelerate
+        #then, accelerate the player
+        if self.acceleratingForward and not self.skidding: #accelerate
             self.playerSpeed += self.PLAYER_ACCELERATION
-        else: #not moving forward, reduce speed
+        else: #not moving forward, reduce speed slightly
             if self.playerSpeed > 0:
                 self.playerSpeed += self.PLAYER_DECELERATION
 
-        #then, check if we are skidding
+        #if we are skidding, update sprite and player movement
         if self.skidding:
-            #deccelerate
             self.playerSpeed += self.SKID_DECEL
             #change sprite to skid
-            playerSprite = pygame.image.load(self.resPath + self.PLAYER_SPRITE_PATH_SKID)
-            playerSprite = pygame.transform.flip(playerSprite, False, True)
-            if not self.skiddingLeft:
-                #flips sprite for right skids
-                playerSprite = pygame.transform.flip(playerSprite, True, False)
+            self.playerSprite = pygame.image.load(self.resPath + self.PLAYER_SPRITE_PATH_SKID)
+            self.playerSprite = pygame.transform.flip(self.playerSprite, False, True)
+            if not self.skiddingLeft: #flips sprite for right skids
+                self.playerSprite = pygame.transform.flip(self.playerSprite, True, False)
 
         #speed limit check
         if self.playerSpeed > self.PLAYER_SPEED_MAX:
@@ -161,33 +176,19 @@ class RaceInstance:
         elif self.playerSpeed < 0: 
             self.playerSpeed = 0
 
-        #rotate player sprite 
-        rotatedSprite = pygame.transform.rotate(playerSprite, self.playerRotation)
-        #center it on the existing sprite
-        rotatedSprite.get_rect().center = playerSprite.get_rect().center
-        playerSprite = rotatedSprite
+        #rotate player sprite and maintain position
+        rotatedSprite = pygame.transform.rotate(self.playerSprite, self.playerRotation)
+        rotatedSprite.get_rect().center = self.playerSprite.get_rect().center
+        self.playerSprite = rotatedSprite
             
         #update camera with difference in x, y given rotation and speed
         self.cameraDelta = getCameraDelta(self.camera[0], self.camera[1], self.playerRotation, self.playerSpeed)
         self.camera = self.camera[0] + self.cameraDelta[0], self.camera[1] + self.cameraDelta[1]
-        
-        #draw everything to screen
-        #fill w black
-        screen.fill((0, 0, 0))
-
-        #add camera to background as "offset"
-        self.bgRect = self.bgImage.get_rect()
-        self.bgRect.topleft = self.bgRect.top + self.camera[0], self.bgRect.left + self.camera[1]
-        #draw bg to screen
-        screen.blit(self.bgImage, self.bgRect)
 
         #set up player rect to be centered on screen
-        playerRect = ((self.screenSize[0] // 2) - (playerSprite.get_rect().left // 2),
-                      (self.screenSize[1] // 2) - (playerSprite.get_rect().top // 2),
-                      #self.PLAYER_SIZE[0], self.PLAYER_SIZE[1])
-                       playerSprite.get_rect().width, playerSprite.get_rect().height)
-        #draw player sprite to screen
-        screen.blit(playerSprite, playerRect)
+        self.playerRect = ((self.screenSize[0] // 2) - (self.playerSprite.get_rect().left // 2),
+                      (self.screenSize[1] // 2) - (self.playerSprite.get_rect().top // 2),
+                       self.playerSprite.get_rect().width, self.playerSprite.get_rect().height)
 
 def getCameraDelta(x, y, angle, length):
     #get angle sanitized

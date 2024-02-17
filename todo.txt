@@ -1,14 +1,8 @@
 current:
-lbs kgs label and switch on scale
-
 
 todo:
 
 credits
-
-little scale in bikeshop that displays bike's weight
-
-update items dict with inventory contents
 
 figure out atribute system and how it will relate to races
     display attributes of current build on right of screen in bikeshop
@@ -28,7 +22,6 @@ figure out system to purchase non-inventory items
     clicking on non-unlocked item opens a pop up to purchase it
     you can't see the stats until purchased ofc, encourage a mf to buy everything
 
-remove items in inventory manager
 inventory manager cleanup + comments
 
 could mainmenu and bike shop share an inference module?
