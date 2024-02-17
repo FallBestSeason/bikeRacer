@@ -4,8 +4,8 @@ import math
 import os, sys
 current_dir = os.path.dirname(__file__)
 sys.path.append(current_dir)
-from button import Button
-from Inventory.inventoryManager import InventoryManager
+from particle import Particle
+from inventory.inventoryManager import InventoryManager
 
 class RaceInstance:
     #constants for UI stuff

@@ -3,7 +3,7 @@ from pygame.rect import Rect
 import os, sys
 current_dir = os.path.dirname(__file__)
 sys.path.append(current_dir)
-from Instance.button import Button
+from element.button import Button
 
 class MainMenu:
     #constants for ui stuff

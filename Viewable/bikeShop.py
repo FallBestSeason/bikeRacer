@@ -5,7 +5,7 @@ current_dir = os.path.dirname(__file__)
 sys.path.append(current_dir)
 from button import Button
 from slider import Slider
-from Inventory.inventoryManager import InventoryManager
+from inventory.inventoryManager import InventoryManager
 
 class BikeShop:
     #Constants for UI stuff
