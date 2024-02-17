@@ -1,6 +1,6 @@
-from GUI.mainMenu import MainMenu
-from GUI.bikeShop import BikeShop
-from GUI.raceInstance import RaceInstance
+from Viewable.mainMenu import MainMenu
+from Viewable.bikeShop import BikeShop
+from Viewable.raceInstance import RaceInstance
 
 #state handler class
 #instances GUI classes as self.gui and updates this state based on user input

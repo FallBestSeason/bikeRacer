@@ -9,9 +9,12 @@ from Inventory.inventoryManager import InventoryManager
 
 class RaceInstance:
     #constants for UI stuff
-    ENABLE_DEBUG_MENU = True
+    DEBUG_ENABLED = True
 
     #constants for race stuff
+    SKID_BOOST_TIME = 30
+    SKID_BOOST_MAX = 12
+    SKID_BOOST_ACCEL = 0.4
     #max speed and accel for player
     PLAYER_SPEED_MAX = 8
     PLAYER_ACCELERATION = 0.1
@@ -19,7 +22,6 @@ class RaceInstance:
     SKID_DECEL = -0.03
     #rate at which playerLeanAmount is changed
     PLAYER_LEAN_DELTA = 4
-    #each range represents a state leanAmount can occupy
     SMALL_LEAN_RANGE = (25, 75)
     LARGE_LEAN_RANGE = (75, 125)
     #offset amounts for rotating player
@@ -50,6 +52,7 @@ class RaceInstance:
     skidding = False
     skidNotStarted = True
     SkiddingLeft = False
+    skidBoostTimer = 0
 
     #represents delta x, y to offset background
     camera = (0, 0)
@@ -59,8 +62,9 @@ class RaceInstance:
         currentDir = os.path.dirname(__file__)
         self.resPath = os.path.join(currentDir, "res\\")
 
-        #gets debug font initalized
-        self.debugFont = pygame.font.Font(self.resPath+"font.ttf", 10)
+        #set up font for debug
+        if self.DEBUG_ENABLED:
+            self.debugFont = pygame.font.Font(self.resPath+"font.ttf", 10)
 
         #import screensize from method
         self.screenSize = screenSize
@@ -101,16 +105,33 @@ class RaceInstance:
 
     def draw(self, pygame, screen):
         self.updatePlayer()
+        self.updateDebug()
         
         #fill w black
-        screen.fill((0, 0, 0))
+        screen.fill((40, 40, 40))
 
         #add camera to background as "offset"
         self.bgRect = self.bgImage.get_rect()
         self.bgRect.topleft = self.bgRect.top + self.camera[0], self.bgRect.left + self.camera[1]
+
+        #draw background to screen
         screen.blit(self.bgImage, self.bgRect)
 
+        #draw player to screen
         screen.blit(self.playerSprite, self.playerRect)
+
+        #draw debug elements to screen
+        debugOffset = 0
+        for line in self.debugStrings:
+            renderedLine = self.debugFont.render(line, True, (0, 0, 0))
+            debugRect = (0, debugOffset, 100, 10)
+            screen.blit(renderedLine, debugRect)
+            debugOffset += 10
+            
+    def updateDebug(self):
+        self.debugStrings = []
+        self.debugStrings.append(f"speed: {self.playerSpeed}")
+        self.debugStrings.append(f"boostTimer: {self.skidBoostTimer}")
 
     #updates player rotation and sprite given the current state vars
     def updatePlayer(self):
@@ -169,12 +190,21 @@ class RaceInstance:
             self.playerSprite = pygame.transform.flip(self.playerSprite, False, True)
             if not self.skiddingLeft: #flips sprite for right skids
                 self.playerSprite = pygame.transform.flip(self.playerSprite, True, False)
+            #set timer for skid speed boost
+            self.skidBoostTimer = 30
 
         #speed limit check
-        if self.playerSpeed > self.PLAYER_SPEED_MAX:
-            self.playerSpeed = self.PLAYER_SPEED_MAX
-        elif self.playerSpeed < 0: 
-            self.playerSpeed = 0
+        if self.skidBoostTimer > 0: #we are skidding
+            if self.playerSpeed > self.SKID_BOOST_MAX:
+                self.playerSpeed = self.SKID_BOOST_MAX
+            elif self.playerSpeed < 0: 
+                self.playerSpeed = 0
+            self.skidBoostTimer -= 1
+        else: #we are not skidding
+            if self.playerSpeed > self.PLAYER_SPEED_MAX:
+                self.playerSpeed = self.PLAYER_SPEED_MAX
+            elif self.playerSpeed < 0: 
+                self.playerSpeed = 0
 
         #rotate player sprite and maintain position
         rotatedSprite = pygame.transform.rotate(self.playerSprite, self.playerRotation)
