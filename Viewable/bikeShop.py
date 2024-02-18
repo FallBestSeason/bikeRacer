@@ -4,12 +4,13 @@ import os, sys
 current_dir = os.path.dirname(__file__)
 sys.path.append(current_dir)
 from button import Button
+from imageButton import ImageButton
 from slider import Slider
 from inventory.inventoryManager import InventoryManager
 
 class BikeShop:
     #Constants for UI stuff
-    FONT_SIZE = 15
+    FONT_SIZE = 20
     FONT_SPACING = 10
     BUTTON_SPACING = 10
     SECONDARY_BUTTON_HEIGHT = 40
@@ -18,9 +19,16 @@ class BikeShop:
     FONT_COLOR = (0, 0, 0)
     BG_COLOR = (100, 100, 100)
     NAV_BUTTON_SIZE = (150, 45)
+    PRIMARY_BUTTON_SIZE = (244, 122)
     #Strings for text elements. may be refactored into textures later
     BUTTON_STRINGS = ["frame & gearing", "saddle", "drivetrain", "wheels", "cockpit"]
-    BUTTON_PATHS = ["\\shop elements\\frameAndGearingLabel"]
+    BUTTON_PATHS = [
+        "\\shop elements\\frameAndGearingLabel.png",
+        "\\shop elements\\saddleLabel.png",
+        "\\shop elements\\drivetrainLabel.png",
+        "\\shop elements\\wheelsLabel.png",
+        "\\shop elements\\cockpitLabel.png",
+    ]
     SECONDARY_OPTIONS = [["frame", "front gearing", "rear gearing"], ["saddle", "seatpost"], 
                          ["crankset", "chainring", "chain", "pedals"], 
                          ["hubs", "rims", "tires"], ["stem", "bar", "bar tape"]]
@@ -83,11 +91,11 @@ class BikeShop:
         self.drawBikeVisualization(pygame, screen)
 
         #draws scale background to screen
-        scaleImage = pygame.image.load(f"{self.resPath}\\shop elements\\scale.png")
+        scaleImage = pygame.image.load(f"{self.resPath}shop elements\\scale.png")
         screen.blit(scaleImage, self.scaleRect)
 
         #draws clipboard background to screen
-        sliderLabelImage = pygame.image.load(f"{self.resPath}\\shop elements\\clipboard.png")
+        sliderLabelImage = pygame.image.load(f"{self.resPath}shop elements\\clipboard.png")
         sliderLabelImage = pygame.transform.scale(sliderLabelImage, (500, 666))
         screen.blit(sliderLabelImage, self.clipboardRect)
         
@@ -178,21 +186,17 @@ class BikeShop:
             self.lowerBg[1] + self.BUTTON_SPACING,
             self.lowerBg[2] - 2 * self.BUTTON_SPACING,
             self.lowerBg[3] - 2 * self.BUTTON_SPACING)
-        #calculate width of each button
-        numButtons = 5
-        self.buttonWidth = (self.buttonRange[2] - (numButtons - 1) * self.BUTTON_SPACING) // numButtons
 
         #loops through each button, builds object, and adds it to array.
         #offset is for moving buttons across screen without gaps or overlap.
         buttonOffset = 0
-        for i, _ in enumerate(range(numButtons)):
+        for i in range(5):
+            currentImage = pygame.image.load(self.resPath+self.BUTTON_PATHS[i])
             buttonRect = Rect(
                 self.buttonRange[0] + buttonOffset, self.buttonRange[1], 
-                self.buttonWidth, self.buttonRange[3])
-            self.buttons.append(Button(
-                buttonRect, self.FONT_SIZE, self.FONT_SPACING,
-                self.BUTTON_COLOR, self.FONT_COLOR, self.BUTTON_STRINGS[i]))
-            buttonOffset += self.buttonWidth + self.BUTTON_SPACING
+                self.PRIMARY_BUTTON_SIZE[0], self.PRIMARY_BUTTON_SIZE[1])
+            self.buttons.append(ImageButton(buttonRect, currentImage, self.BUTTON_STRINGS[i]))
+            buttonOffset += self.PRIMARY_BUTTON_SIZE[0] + self.BUTTON_SPACING
 
     #generates and builds array of secondary buttons off of button that was clicked
     def generateSecondaryButtons(self, ind):
@@ -200,9 +204,9 @@ class BikeShop:
         buttonOffset = 0
         for i, string in enumerate(self.SECONDARY_OPTIONS[ind]):
             buttonRect = (
-                self.buttonRange[0] + ((self.buttonWidth + self.BUTTON_SPACING) * ind), 
+                self.buttonRange[0] + ((self.PRIMARY_BUTTON_SIZE[0] + self.BUTTON_SPACING) * ind), 
                 self.buttonRange[1] - self.SECONDARY_BUTTON_HEIGHT - self.BUTTON_SPACING + buttonOffset,
-                self.buttonWidth, self.SECONDARY_BUTTON_HEIGHT)
+                self.PRIMARY_BUTTON_SIZE[0], self.SECONDARY_BUTTON_HEIGHT)
             self.secondaryButtons.append(Button(
                 buttonRect, self.FONT_SIZE, self.FONT_SPACING,
                 self.BUTTON_COLOR, self.FONT_COLOR, 
@@ -229,13 +233,13 @@ class BikeShop:
 
         #calculate position of -each button and put it into tertiaryButtons as a rect (foreach item in list in category)
         for item in items:
-            x = self.secondaryButtons[ind].rect[0] + self.buttonWidth + self.BUTTON_SPACING
+            x = self.secondaryButtons[ind].rect[0] + self.PRIMARY_BUTTON_SIZE[0] + self.BUTTON_SPACING
             y = self.secondaryButtons[ind].rect[1] + buttonOffset
-            w = self.buttonWidth
+            w = self.PRIMARY_BUTTON_SIZE[0]
             h = self.SECONDARY_BUTTON_HEIGHT
             buttonRect = Rect(x, y, w, h)
             if buttonXDirection == -1:
-                buttonRect[0] -= 2 * (self.buttonWidth + self.BUTTON_SPACING)
+                buttonRect[0] -= 2 * (self.PRIMARY_BUTTON_SIZE[0] + self.BUTTON_SPACING)
             self.tertiaryButtons.append(Button(
                 buttonRect, self.FONT_SIZE, self.FONT_SPACING,
                 self.BUTTON_COLOR, self.FONT_COLOR, item.get("name")))

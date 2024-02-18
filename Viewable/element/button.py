@@ -20,29 +20,20 @@ class Button:
         resPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "res\\")
 
         #set up font object for rendering text
-        buttonFont = pygame.font.Font(resPath+"font.ttf", fontSize)
+        buttonFont = pygame.font.Font(resPath+"backto1982.ttf", fontSize)
         self.renderedText = buttonFont.render(string, True, fontColor)
-
-    #init for using button with image
-    def __init__(self, rect, image, string):
-        self.rect = rect
-        self.image = image
-        self.string = string
 
     #generates location and size of text box. reduces complexity in init
     def generateTextRect(self, rect, fontSpacing, fontSize):
         return (rect[0] + fontSpacing,
-                rect[1] + rect[3] // 2 - fontSize,
+                rect[1] + rect[3] // 2 - fontSize + fontSpacing,
                 rect[2] - fontSpacing,
                 rect[3] - fontSpacing)
 
     #adds elements of button to backside
     def draw(self, pygame, screen):
-        if self.image != '':
-            screen.blit(self.image, self.rect)
-        else:
-            pygame.draw.rect(screen, self.bgColor, self.rect)
-            screen.blit(self.renderedText, self.textRect[:2])
+        pygame.draw.rect(screen, self.bgColor, self.rect)
+        screen.blit(self.renderedText, self.textRect[:2])
 
     #check if the click position is within the button's bounds
     def checkClicked(self, click):

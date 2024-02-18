@@ -8,17 +8,17 @@ sys.path.append(current_dir)
 class Bike:
     bikeItems = {
         "subframe": "big block subframe",
-        "stem": "used alloy stem",
+        "stem": "oem stem",
         "bar": "flat",
-        "seatpost": "used alloy post",
+        "seatpost": "oem post",
         "saddle": "powercomp",
         "hubs": "formula track",
         "rims": "alex DH19",
         "tires": "gatorskins",
         "frame": "big block",
-        "chainring": "used alloy chainring",
-        "chain": "standard chain",
-        "crankset": "used alloy crankset",
+        "chainring": "oem ring",
+        "chain": "1/8th\" chain",
+        "crankset": "oem cranks",
         "pedals": "flats",
         "front gearing": "46",
         "rear gearing": "17"
