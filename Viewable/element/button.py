@@ -6,6 +6,7 @@ sys.path.append(current_dir)
 #abstract instance module, handles data and math for making buttons
 #notably has mehtod to check if a click's coordinate is within a button
 class Button:
+    #init for using button with text
     def __init__(self, rect, fontSize, fontSpacing, bgColor, fontColor, string):
         #take imported data from parent
         self.rect = rect
@@ -22,6 +23,12 @@ class Button:
         buttonFont = pygame.font.Font(resPath+"font.ttf", fontSize)
         self.renderedText = buttonFont.render(string, True, fontColor)
 
+    #init for using button with image
+    def __init__(self, rect, image, string):
+        self.rect = rect
+        self.image = image
+        self.string = string
+
     #generates location and size of text box. reduces complexity in init
     def generateTextRect(self, rect, fontSpacing, fontSize):
         return (rect[0] + fontSpacing,
@@ -31,10 +38,13 @@ class Button:
 
     #adds elements of button to backside
     def draw(self, pygame, screen):
-        pygame.draw.rect(screen, self.bgColor, self.rect)
-        screen.blit(self.renderedText, self.textRect[:2])
+        if self.image != '':
+            screen.blit(self.image, self.rect)
+        else:
+            pygame.draw.rect(screen, self.bgColor, self.rect)
+            screen.blit(self.renderedText, self.textRect[:2])
 
-    #Check if the click position is within the button's bounds, returns text on button
+    #check if the click position is within the button's bounds
     def checkClicked(self, click):
         buttonX, buttonY = self.rect[:2]
         buttonWidth, buttonHeight = self.rect[2], self.rect[3]

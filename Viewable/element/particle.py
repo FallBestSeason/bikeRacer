@@ -6,14 +6,12 @@ current_dir = os.path.dirname(__file__)
 sys.path.append(current_dir)
 
 class ParticleNode:
-    ARC_SLOPE = 0.005
-    ARC_OFFSET_X = 100
 
-    ARC_SLOPE_RAND_RANGE = (-0.002, 0.002)
-    ARC_OFFSET_RAND_RANGE = (-20, 20)
+    XSPREAD = (50, 60)
+    YSPREAD = (10, 80)
 
-    PARTICLE_COLOR = (0, 0, 0)
-    PARTICLE_SIZE = 10
+    PARTICLE_COLOR = (61, 92, 92)
+    PARTICLE_SIZE = 3
 
     particles = []
 
@@ -22,49 +20,59 @@ class ParticleNode:
         self.particleLifeSpan = particleLifeSpan
 
         for _ in range(numParticles):
-            newPart = Particle(
-                self.PARTICLE_COLOR, 
-                self.PARTICLE_SIZE, 
-                particleLifeSpan,
-                self.ARC_SLOPE + random.uniform(
-                    self.ARC_SLOPE_RAND_RANGE[0],
-                    self.ARC_SLOPE_RAND_RANGE[1]
-                ),
-                self.ARC_OFFSET_X + random.uniform(
-                    self.ARC_OFFSET_RAND_RANGE[0],
-                    self.ARC_OFFSET_RAND_RANGE[1]
-                )
-            )
-            self.particles.append(newPart)
+            self.particles.append(Particle(
+                [100, 100], 3, 300,
+                [random.randint(self.XSPREAD[0], self.XSPREAD[1]),
+                random.randint(self.YSPREAD[0], self.YSPREAD[1])]
+            ))
 
     def draw(self, pygame, screen, offset):
-        updatedParticles = []
         for particle in self.particles:
-            if particle.livedTicks < particle.lifespan:
-                updatedParticles.append(particle)
-            test = particle.getCurrentRect()
-            test[0] += offset[0]
-            test[1] += offset[1]
-            pygame.draw.rect(screen, self.PARTICLE_COLOR, test)
-        self.particles = updatedParticles
+            pygame.draw.rect(screen, self.PARTICLE_COLOR, particle.getRect())
+
+    def containsAlive(self):
+        for i, particle in enumerate(self.particles):
+            if particle.getAlive():
+                return True
+        return False
             
 class Particle:
-    def __init__(self, color, size, lifespan, arcSlope, arcHeight):
-        self.color = color
-        self.size = size
-        self.lifespan = lifespan
-        self.livedTicks = 1
-        self.arcSlope = arcSlope
-        self.arcHeight = arcHeight
+    maxSpeed = 10
+    acceleration = [0, 0]
+    deceleration = 1
+    gravity = 0.5
+    age = 0
 
-        xWidth = 2 * (math.sqrt(arcHeight) / math.sqrt(arcSlope))
-        self.xStep = xWidth / lifespan
- 
-    def getCurrentRect(self):
-        currentX = self.livedTicks * self.xStep
-        self.livedTicks += 1
-        return [
-            currentX,
-            ((currentX ** 2) * self.arcSlope) + self.arcHeight,
-            self.size, self.size
-        ]
+    def __init__(self, pos, size, lifeSpan, initAccel):
+        self.pos = pos
+        self.size = size
+        self.lifeSpan = lifeSpan
+        self.acceleration[0] = initAccel[0]
+        self.acceleration[1] = initAccel[1]
+
+    def updatePhysics(self):
+        self.acceleration[0] += -1 if self.acceleration[0] > 0 else 1 if self.acceleration[0] < 0 else 0
+        self.acceleration[1] += -1 if self.acceleration[1] > 0 else 1 if self.acceleration[1] < 0 else 0
+
+        #gravity
+        self.acceleration[1] += self.gravity
+
+        #update pos from accel
+        self.pos[0] += self.acceleration[0]
+        self.pos[1] += self.acceleration[1]
+
+        #vibe check speed
+        self.acceleration[0] = min(self.maxSpeed, max(-self.maxSpeed, self.acceleration[0]))
+        self.acceleration[1] = min(self.maxSpeed, max(-self.maxSpeed, self.acceleration[1]))
+
+        self.age += 1
+
+    def getRect(self):
+        self.updatePhysics()
+        testRect = [self.pos[0], self.pos[1], self.size, self.size]
+        return testRect
+
+    def GetAlive(self):
+        if self.age >= self.lifeSpan:
+            return False
+        return True

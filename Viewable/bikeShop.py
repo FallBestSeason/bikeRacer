@@ -20,6 +20,7 @@ class BikeShop:
     NAV_BUTTON_SIZE = (150, 45)
     #Strings for text elements. may be refactored into textures later
     BUTTON_STRINGS = ["frame & gearing", "saddle", "drivetrain", "wheels", "cockpit"]
+    BUTTON_PATHS = ["\\shop elements\\frameAndGearingLabel"]
     SECONDARY_OPTIONS = [["frame", "front gearing", "rear gearing"], ["saddle", "seatpost"], 
                          ["crankset", "chainring", "chain", "pedals"], 
                          ["hubs", "rims", "tires"], ["stem", "bar", "bar tape"]]

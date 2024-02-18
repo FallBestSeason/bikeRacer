@@ -37,6 +37,7 @@ class RaceInstance:
 
     #mutable vars
     debugStrings = []
+    particleNodes = []
 
     #arbitrary number, represents range player can lean in
     playerLeanAmount = 0
@@ -72,7 +73,7 @@ class RaceInstance:
         #set up background image
         self.bgImage = pygame.image.load(self.resPath + self.BG_SPRITE_PATH)
 
-        self.particleNode = ParticleNode(5, 300)
+        self.particleNodes.append(ParticleNode(5, 150))
 
     #handles key presses
     def keyDown(self, event):
@@ -84,6 +85,7 @@ class RaceInstance:
             self.leaningLeft = True
         if event.key == pygame.K_SPACE: #space pressed
             self.skidding = True
+            self.skidNotStarted = False
             if self.leaningLeft:
                 self.skiddingLeft = True
             else:
@@ -99,7 +101,6 @@ class RaceInstance:
             self.leaningLeft = False
         if event.key == pygame.K_SPACE: #space released
             self.skidding = False
-            self.skidNotStarted = True
             if self.skiddingLeft:
                 self.playerRotation += self.PLAYER_SKID_ROTATION
             else:
@@ -120,7 +121,10 @@ class RaceInstance:
         screen.blit(self.bgImage, self.bgRect)
 
         #draw particles to screen
-        self.particleNode.draw(pygame, screen, (200, 200))
+        particlex = self.camera[0] + screen.get_rect().width // 2 
+        particley = self.camera[1] + screen.get_rect().height // 2 + 24
+        for node in self.particleNodes:
+            node.draw(pygame, screen, (particlex, particley))
 
         #draw player to screen
         screen.blit(self.playerSprite, self.playerRect)
@@ -136,6 +140,7 @@ class RaceInstance:
     def updateDebug(self):
         self.debugStrings = []
         self.debugStrings.append(f"speed: {round(self.playerSpeed, 2)}")
+        self.debugStrings.append(f"playerLean: {self.playerLeanAmount}")
         self.debugStrings.append(f"boostTimer: {self.skidBoostTimer}")
 
     #updates player rotation and sprite given the current state vars
