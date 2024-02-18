@@ -14,13 +14,14 @@ class BikeShop:
     FONT_SPACING = 10
     BUTTON_SPACING = 10
     SECONDARY_BUTTON_HEIGHT = 40
-    LOWERBG_COLOR = (0, 80, 100)
+    LOWERBG_COLOR = (102, 57, 49)
     BUTTON_COLOR = (120, 120, 120)
     FONT_COLOR = (0, 0, 0)
     BG_COLOR = (100, 100, 100)
-    NAV_BUTTON_SIZE = (150, 45)
+    NAV_BUTTON_SIZE = (180, 45)
     PRIMARY_BUTTON_SIZE = (244, 122)
-    #Strings for text elements. may be refactored into textures later
+    BG_PATH = "\\shop elements\\shopBackground.png"
+    #elements for buttons
     BUTTON_STRINGS = ["frame & gearing", "saddle", "drivetrain", "wheels", "cockpit"]
     BUTTON_PATHS = [
         "\\shop elements\\frameAndGearingLabel.png",
@@ -32,7 +33,7 @@ class BikeShop:
     SECONDARY_OPTIONS = [["frame", "front gearing", "rear gearing"], ["saddle", "seatpost"], 
                          ["crankset", "chainring", "chain", "pedals"], 
                          ["hubs", "rims", "tires"], ["stem", "bar", "bar tape"]]
-    NAV_STRINGS = ["BACK TO MENU", "GO RACE!"]
+    NAV_STRINGS = ["MAIN MENU", "GO RACE!"]
 
     #boolean control vars for branching menu state
     isOpen = [False, False, False, False, False]
@@ -86,6 +87,15 @@ class BikeShop:
     #draws all elements of class to backside (called each tick)
     def draw(self, pygame, screen):
         screen.fill(self.BG_COLOR)
+        bgImage = pygame.image.load(self.resPath + self.BG_PATH)
+        bgImage = pygame.transform.scale(bgImage, (2500, 1406))
+        bgImageRect = Rect(
+            -400,
+            -400,
+            bgImage.get_rect().width,
+            bgImage.get_rect().height
+        )
+        screen.blit(bgImage, bgImageRect)
 
         #draws bike visualization that sits center screen
         self.drawBikeVisualization(pygame, screen)

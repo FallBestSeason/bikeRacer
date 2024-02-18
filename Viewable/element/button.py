@@ -20,13 +20,13 @@ class Button:
         resPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "res\\")
 
         #set up font object for rendering text
-        buttonFont = pygame.font.Font(resPath+"backto1982.ttf", fontSize)
+        buttonFont = pygame.font.Font(resPath+"joystix.otf", fontSize)
         self.renderedText = buttonFont.render(string, True, fontColor)
 
     #generates location and size of text box. reduces complexity in init
     def generateTextRect(self, rect, fontSpacing, fontSize):
         return (rect[0] + fontSpacing,
-                rect[1] + rect[3] // 2 - fontSize + fontSpacing,
+                rect[1] + rect[3] // 2 - fontSize,
                 rect[2] - fontSpacing,
                 rect[3] - fontSpacing)
 

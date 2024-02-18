@@ -37,7 +37,7 @@ class GameHandler:
         elif clicked == "ENTER SHOP":
             self.screen.fill((0, 0, 0))
             self.gui = BikeShop(self.screenSize)
-        elif clicked == "BACK TO MENU":
+        elif clicked == "MAIN MENU":
             self.screen.fill((0, 0, 0))
             self.gui = MainMenu(self.screenSize)
         elif clicked == "GO RACE!":
