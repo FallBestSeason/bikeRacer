@@ -11,8 +11,8 @@ class GameHandler:
         self.pygame = pygame
         self.screen = screen
 
-    def draw(self):
-        self.gui.draw(self.pygame, self.screen)
+    def draw(self, dTime):
+        self.gui.draw(self.pygame, self.screen, dTime)
 
     def event(self, event):
         if event.type == self.pygame.QUIT:

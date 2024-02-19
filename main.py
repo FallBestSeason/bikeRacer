@@ -30,12 +30,10 @@ def main():
                         
         #game tick 
         #draws current UI
-        gh.draw()
+        gh.draw(clock.tick(60) / 1000)
 
         #puts frame in memory on screen
         pygame.display.flip()
-
-        clock.tick(60)
 
 if __name__=="__main__":
     main()

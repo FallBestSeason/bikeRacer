@@ -37,7 +37,6 @@ class BikeShop:
 
     #boolean control vars for branching menu state
     isOpen = [False, False, False, False, False]
-    clickedButton = ""
 
     #other mutable vars
     buttons = []
@@ -75,17 +74,17 @@ class BikeShop:
             (860, 185, 100, 100), 
             (1130, 185, 100, 100)
         ]
-        self.chainRingFont = pygame.font.Font(self.resPath+"font.ttf", 40)
+        self.chainRingFont = pygame.font.Font(self.resPath+"joystix.otf", 40)
         self.renderedChainRingTexts = []
 
         #set up scale and scale elements
         self.scaleRect = (340, 7, 200, 200)
         self.scaleTextRect = (396, 64, 100, 100)
-        self.scaleFont = pygame.font.Font(self.resPath+"font.ttf", 30)
+        self.scaleFont = pygame.font.Font(self.resPath+"joystix.otf", 23)
         self.renderedScaleText = ""
 
     #draws all elements of class to backside (called each tick)
-    def draw(self, pygame, screen):
+    def draw(self, pygame, screen, dTime):
         screen.fill(self.BG_COLOR)
         bgImage = pygame.image.load(self.resPath + self.BG_PATH)
         bgImage = pygame.transform.scale(bgImage, (2500, 1406))
@@ -136,7 +135,6 @@ class BikeShop:
             button.draw(pygame, screen)
 
     #draws bike to screen
-    #will be massively rewritten in future!
     def drawBikeVisualization(self, pygame, screen):
         for key, value in self.inv.bike.getDict().items():
             if value != '':
@@ -269,15 +267,18 @@ class BikeShop:
         #generate secondary buttons from starting pos of primary
         for i, button in enumerate(self.buttons):
             if button.checkClicked(click):
+                #reset tertiary buttons
                 self.tertiaryButtons = []
-                self.isOpen = [False, False, False, False, False]
-                self.isOpen[i] = True
-                if self.clickedButton == button:
+                #check if this button is currently open
+                if self.isOpen[i]:
+                    #reset secondary buttons if it was
                     self.secondaryButtons = []
+                    #close it
+                    self.isOpen = [False, False, False, False, False]
                 else:
                     self.generateSecondaryButtons(i)
-                    self.clickedButton = ""
-                self.clickedButton = button
+                    self.isOpen = [False, False, False, False, False]
+                    self.isOpen[i] = True
 
         #if secondary button clicked, generate tertiary buttons
         #generation uses location of button clicked

@@ -73,8 +73,6 @@ class RaceInstance:
         #set up background image
         self.bgImage = pygame.image.load(self.resPath + self.BG_SPRITE_PATH)
 
-        self.particleNodes.append(ParticleNode(5, 150))
-
     #handles key presses
     def keyDown(self, event):
         if event.key == pygame.K_w: #w pressed
@@ -106,9 +104,9 @@ class RaceInstance:
             else:
                 self.playerRotation -= self.PLAYER_SKID_ROTATION
 
-    def draw(self, pygame, screen):
+    def draw(self, pygame, screen, dTime):
         self.updatePlayer()
-        self.updateDebug()
+        self.updateDebug(dTime)
         
         #fill w black
         screen.fill((40, 40, 40))
@@ -121,10 +119,12 @@ class RaceInstance:
         screen.blit(self.bgImage, self.bgRect)
 
         #draw particles to screen
-        particlex = self.camera[0] + screen.get_rect().width // 2 
-        particley = self.camera[1] + screen.get_rect().height // 2 + 24
+        drawnNodes = []
         for node in self.particleNodes:
-            node.draw(pygame, screen, (particlex, particley))
+            if node.isNotEmpty():
+                drawnNodes.append(node)
+                node.draw(screen)
+        self.particleNodes = drawnNodes
 
         #draw player to screen
         screen.blit(self.playerSprite, self.playerRect)
@@ -137,11 +137,13 @@ class RaceInstance:
             screen.blit(renderedLine, debugRect)
             debugOffset += 12
             
-    def updateDebug(self):
+    def updateDebug(self, dTime):
         self.debugStrings = []
         self.debugStrings.append(f"speed: {round(self.playerSpeed, 2)}")
         self.debugStrings.append(f"playerLean: {self.playerLeanAmount}")
         self.debugStrings.append(f"boostTimer: {self.skidBoostTimer}")
+        self.debugStrings.append(f"particleNodes: {len(self.particleNodes)}")
+        self.debugStrings.append(f"frameTime: {dTime}")
 
     #updates player rotation and sprite given the current state vars
     def updatePlayer(self):
@@ -194,6 +196,7 @@ class RaceInstance:
 
         #if we are skidding, update sprite and player movement
         if self.skidding:
+            self.particleNodes.append(ParticleNode((640, 360), 10))
             self.playerSpeed += self.SKID_DECEL
             #change sprite to skid
             self.playerSprite = pygame.image.load(self.resPath + self.PLAYER_SPRITE_PATH_SKID)

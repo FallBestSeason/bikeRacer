@@ -26,7 +26,7 @@ class Button:
     #generates location and size of text box. reduces complexity in init
     def generateTextRect(self, rect, fontSpacing, fontSize):
         return (rect[0] + fontSpacing,
-                rect[1] + rect[3] // 2 - fontSize,
+                rect[1] + (rect[3] % fontSize) / 2,
                 rect[2] - fontSpacing,
                 rect[3] - fontSpacing)
 

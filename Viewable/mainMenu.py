@@ -68,7 +68,7 @@ class MainMenu:
                              screenSize[0] - self.BUTTON_SPACING * 2, 400)
 
     #draws all ui elements in to memory
-    def draw(self, pygame, screen):
+    def draw(self, pygame, screen, dTime):
         #background
         pygame.draw.rect(screen, self.BACKGROUND_COLOR, 
                          (0, 0, self.screenSize[0], self.screenSize[1]))
