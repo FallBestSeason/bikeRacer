@@ -6,7 +6,7 @@ from viewable.raceInstance import RaceInstance
 #instances GUI classes as self.gui and updates this state based on user input
 class GameHandler:
     def __init__(self, screenSize, pygame, screen):
-        self.gui = MainMenu(screenSize)
+        self.gui = RaceInstance(screenSize)
         self.screenSize = screenSize
         self.pygame = pygame
         self.screen = screen

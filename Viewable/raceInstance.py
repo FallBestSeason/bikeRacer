@@ -118,12 +118,14 @@ class RaceInstance:
         #draw background to screen
         screen.blit(self.bgImage, self.bgRect)
 
+        self.particleNodes.append(ParticleNode((640 - self.camera[0], 360 - self.camera[1]), 10))
+
         #draw particles to screen
         drawnNodes = []
         for node in self.particleNodes:
             if node.isNotEmpty():
                 drawnNodes.append(node)
-                node.draw(screen)
+                node.draw(screen, self.camera)
         self.particleNodes = drawnNodes
 
         #draw player to screen
@@ -196,7 +198,6 @@ class RaceInstance:
 
         #if we are skidding, update sprite and player movement
         if self.skidding:
-            self.particleNodes.append(ParticleNode((640, 360), 10))
             self.playerSpeed += self.SKID_DECEL
             #change sprite to skid
             self.playerSprite = pygame.image.load(self.resPath + self.PLAYER_SPRITE_PATH_SKID)
