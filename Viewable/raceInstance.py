@@ -86,8 +86,10 @@ class RaceInstance:
             self.skidNotStarted = False
             if self.leaningLeft:
                 self.skiddingLeft = True
+                self.nodeOffset = getCameraDelta(self.playerRotation + 90, 8)
             else:
                 self.skiddingLeft = False
+                self.nodeOffset = getCameraDelta(self.playerRotation - 270, 9)
 
     #handles key releases
     def keyUp(self, event):
@@ -118,8 +120,6 @@ class RaceInstance:
         #draw background to screen
         screen.blit(self.bgImage, self.bgRect)
 
-        self.particleNodes.append(ParticleNode((640 - self.camera[0], 360 - self.camera[1]), 10))
-
         #draw particles to screen
         drawnNodes = []
         for node in self.particleNodes:
@@ -129,7 +129,7 @@ class RaceInstance:
         self.particleNodes = drawnNodes
 
         #draw player to screen
-        screen.blit(self.playerSprite, self.playerRect)
+        #screen.blit(self.playerSprite, self.playerRect)
 
         #draw debug elements to screen
         debugOffset = 0
@@ -198,6 +198,7 @@ class RaceInstance:
 
         #if we are skidding, update sprite and player movement
         if self.skidding:
+            self.particleNodes.append(ParticleNode((self.playerRect.center[0] + self.nodeOffset[0], self.playerRect.center[1] + self.nodeOffset[1]), self.camera, self.playerRotation, 1))
             self.playerSpeed += self.SKID_DECEL
             #change sprite to skid
             self.playerSprite = pygame.image.load(self.resPath + self.PLAYER_SPRITE_PATH_SKID)
@@ -226,15 +227,15 @@ class RaceInstance:
         self.playerSprite = rotatedSprite
             
         #update camera with difference in x, y given rotation and speed
-        self.cameraDelta = getCameraDelta(self.camera[0], self.camera[1], self.playerRotation, self.playerSpeed)
+        self.cameraDelta = getCameraDelta(self.playerRotation, self.playerSpeed)
         self.camera = self.camera[0] + self.cameraDelta[0], self.camera[1] + self.cameraDelta[1]
 
         #set up player rect to be centered on screen
-        self.playerRect = ((self.screenSize[0] // 2) - (self.playerSprite.get_rect().left // 2),
+        self.playerRect = Rect((self.screenSize[0] // 2) - (self.playerSprite.get_rect().left // 2),
                       (self.screenSize[1] // 2) - (self.playerSprite.get_rect().top // 2),
                        self.playerSprite.get_rect().width, self.playerSprite.get_rect().height)
 
-def getCameraDelta(x, y, angle, length):
+def getCameraDelta(angle, length):
     #get angle sanitized
     angle -= 90
     angle %= 360
