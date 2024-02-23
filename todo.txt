@@ -1,5 +1,7 @@
 current:
 
+inventory manager cleanup + comments
+
 todo:
 
 credits
@@ -21,8 +23,6 @@ figure out system to purchase non-inventory items
     maybe change bikeshop to populate from items instead of from inventory?
     clicking on non-unlocked item opens a pop up to purchase it
     you can't see the stats until purchased ofc, encourage a mf to buy everything
-
-inventory manager cleanup + comments
 
 could mainmenu and bike shop share an inference module?
     what is cost benefit

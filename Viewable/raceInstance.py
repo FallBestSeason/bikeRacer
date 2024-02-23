@@ -16,7 +16,7 @@ class RaceInstance:
     SKID_BOOST_MAX = 12
     SKID_BOOST_ACCEL = 0.4
     #max speed and accel for player
-    PLAYER_SPEED_MAX = 8
+    PLAYER_SPEED_MAX = 10
     PLAYER_ACCELERATION = 0.1
     PLAYER_DECELERATION = -0.05
     SKID_DECEL = -0.03
@@ -129,7 +129,7 @@ class RaceInstance:
         self.particleNodes = drawnNodes
 
         #draw player to screen
-        #screen.blit(self.playerSprite, self.playerRect)
+        screen.blit(self.playerSprite, self.playerRect)
 
         #draw debug elements to screen
         debugOffset = 0
@@ -142,6 +142,7 @@ class RaceInstance:
     def updateDebug(self, dTime):
         self.debugStrings = []
         self.debugStrings.append(f"speed: {round(self.playerSpeed, 2)}")
+        self.debugStrings.append(f"playerRotation {self.playerRotation}")
         self.debugStrings.append(f"playerLean: {self.playerLeanAmount}")
         self.debugStrings.append(f"boostTimer: {self.skidBoostTimer}")
         self.debugStrings.append(f"particleNodes: {len(self.particleNodes)}")
@@ -198,6 +199,7 @@ class RaceInstance:
 
         #if we are skidding, update sprite and player movement
         if self.skidding:
+            #todo place xy not bassed on player center
             self.particleNodes.append(ParticleNode((self.playerRect.center[0] + self.nodeOffset[0], self.playerRect.center[1] + self.nodeOffset[1]), self.camera, self.playerRotation, 1))
             self.playerSpeed += self.SKID_DECEL
             #change sprite to skid

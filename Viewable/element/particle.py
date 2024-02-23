@@ -6,7 +6,7 @@ current_dir = os.path.dirname(__file__)
 sys.path.append(current_dir)
 
 class ParticleNode:
-    LIFESPAN = 300
+    LIFESPAN = 50
     SIZE = 6
 
     rangeX = [-10, 10]
@@ -29,9 +29,9 @@ class ParticleNode:
             if self.rangeX[0] > self.rangeX[1]:
                 randX = -random.randint(self.rangeX[1], self.rangeX[0])
             else:
-                randX = -random.randint(self.rangeX[0], self.rangeX[1])
+                randX = random.randint(self.rangeX[0], self.rangeX[1])
             if self.rangeY[0] > self.rangeY[1]:
-                randY = -random.randint(self.rangeY[1], self.rangeY[0])
+                randY = random.randint(self.rangeY[1], self.rangeY[0])
             else:
                 randY = -random.randint(self.rangeY[0], self.rangeY[1])
 
@@ -69,7 +69,7 @@ class ParticleNode:
         angleRad = math.radians(deg)
 
         newX = xy[0] * math.cos(angleRad) - xy[1] * math.sin(angleRad)
-        newY = xy[0] * math.sin(angleRad) + xy[1] * math.cos(angleRad)
+        newY = xy[1] * math.sin(angleRad) + xy[0] * math.cos(angleRad)
 
         return newX, newY
             
