@@ -14,15 +14,15 @@ class BikeShop:
     FONT_SPACING = 10
     BUTTON_SPACING = 10
     SECONDARY_BUTTON_HEIGHT = 40
+    NAV_BUTTON_SIZE = (180, 45)
+    PRIMARY_BUTTON_SIZE = (244, 122)
+
     LOWERBG_COLOR = (102, 57, 49)
     BUTTON_COLOR = (120, 120, 120)
     FONT_COLOR = (0, 0, 0)
     BG_COLOR = (100, 100, 100)
-    NAV_BUTTON_SIZE = (180, 45)
-    PRIMARY_BUTTON_SIZE = (244, 122)
+
     BG_PATH = "\\shop elements\\shopBackground.png"
-    #elements for buttons
-    BUTTON_STRINGS = ["frame & gearing", "saddle", "drivetrain", "wheels", "cockpit"]
     BUTTON_PATHS = [
         "\\shop elements\\frameAndGearingLabel.png",
         "\\shop elements\\saddleLabel.png",
@@ -30,6 +30,7 @@ class BikeShop:
         "\\shop elements\\wheelsLabel.png",
         "\\shop elements\\cockpitLabel.png",
     ]
+    BUTTON_STRINGS = ["frame & gearing", "saddle", "drivetrain", "wheels", "cockpit"]
     SECONDARY_OPTIONS = [["frame", "front gearing", "rear gearing"], ["saddle", "seatpost"], 
                          ["crankset", "chainring", "chain", "pedals"], 
                          ["hubs", "rims", "tires"], ["stem", "bar", "bar tape"]]
@@ -38,30 +39,24 @@ class BikeShop:
     #boolean control vars for branching menu state
     isOpen = [False, False, False, False, False]
 
-    #other mutable vars
     buttons = []
     secondaryButtons = []
     tertiaryButtons = []
     navButtons = []
 
     def __init__(self, screenSize):
-        #gets resouce frolder set up 
         currentDir = os.path.dirname(__file__)
         self.resPath = os.path.join(currentDir, "res\\")
-        #import screensize from method
         self.screenSize = screenSize
-        #clears button arrays
         self.buttons = []
+
         #set up lower stripe that acts as background for buttons
         lowerBgHeight = screenSize[1] // 5
         self.lowerBg = Rect(0, lowerBgHeight * 4, screenSize[0], lowerBgHeight)
 
-        #generates lower main buttons
         self.generateNavButtons()
-        #generates rects and objects for buttons
         self.generatePrimaryButtons()
 
-        #sets up inventory manager
         self.inv = InventoryManager()
 
         #set up sliders and clipboard elements
@@ -223,18 +218,15 @@ class BikeShop:
 
     #generate tertiary button options given that a subbutton was clicked
     def generateTertiaryButtons(self, ind):
-        #ind in secondarybuttons
         self.tertiaryButtons = []
         buttonOffset = 0
         buttonYDirection = 0
         buttonXDirection = 1
         items = self.inv.getAllInCat(self.secondaryButtons[ind].string)
 
-       #check if buttons fit screen going down
         if (self.SECONDARY_BUTTON_HEIGHT + buttonOffset) * len(items) > self.lowerBg[1] - self.secondaryButtons[ind].rect[1]:
-            #buttons go up!
             buttonYDirection = -1
-        else: #buttons go down!
+        else: #buttons go down if they don't fit
             buttonYDirection = 1
         if self.isOpen[4]: #if last button, go left
             buttonXDirection = -1 
