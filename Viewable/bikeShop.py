@@ -241,11 +241,12 @@ class BikeShop:
 
         #calculate position of -each button and put it into tertiaryButtons as a rect (foreach item in list in category)
         for item in items:
-            x = self.secondaryButtons[ind].rect[0] + self.PRIMARY_BUTTON_SIZE[0] + self.BUTTON_SPACING
-            y = self.secondaryButtons[ind].rect[1] + buttonOffset
-            w = self.PRIMARY_BUTTON_SIZE[0]
-            h = self.SECONDARY_BUTTON_HEIGHT
-            buttonRect = Rect(x, y, w, h)
+            buttonRect = Rect(
+                self.secondaryButtons[ind].rect[0] + self.PRIMARY_BUTTON_SIZE[0] + self.BUTTON_SPACING,
+                self.secondaryButtons[ind].rect[1] + buttonOffset,
+                self.PRIMARY_BUTTON_SIZE[0],
+                self.SECONDARY_BUTTON_HEIGHT
+            )
             if buttonXDirection == -1:
                 buttonRect[0] -= 2 * (self.PRIMARY_BUTTON_SIZE[0] + self.BUTTON_SPACING)
             self.tertiaryButtons.append(Button(
@@ -267,13 +268,9 @@ class BikeShop:
         #generate secondary buttons from starting pos of primary
         for i, button in enumerate(self.buttons):
             if button.checkClicked(click):
-                #reset tertiary buttons
                 self.tertiaryButtons = []
-                #check if this button is currently open
                 if self.isOpen[i]:
-                    #reset secondary buttons if it was
                     self.secondaryButtons = []
-                    #close it
                     self.isOpen = [False, False, False, False, False]
                 else:
                     self.generateSecondaryButtons(i)

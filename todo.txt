@@ -1,7 +1,5 @@
 current:
 
-inventory manager cleanup + comments
-
 todo:
 
 credits

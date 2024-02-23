@@ -5,7 +5,9 @@ import os, sys
 current_dir = os.path.dirname(__file__)
 sys.path.append(current_dir)
 
+#instance class, represents one bike object
 class Bike:
+    #category and name of items in default bike
     bikeItems = {
         "subframe": "big block subframe",
         "stem": "oem stem",
@@ -27,14 +29,15 @@ class Bike:
     def setPart(self, part):
         self.bikeItems[part.get("category")] = part.get("name")
 
+    #takes a category and returns the current part
     def getPartName(self, cat):
         return self.bikeItems[cat]
     
     def getDict(self):
         return self.bikeItems
         
+#GUI class
 class InventoryManager:
-
     jsonFilePath = "Inventory/inventory.json"
     itemFilePath = "Inventory/items.json"
 
@@ -48,8 +51,8 @@ class InventoryManager:
         #sets up current bike object for current config
         self.bike = Bike()
 
+    #updates items dict with document containing all items and attributes
     def updateItems(self):
-        #reads dictionary data from json file into self.items
         with open(self.itemFilePath, "r") as infile:
             self.items = json.load(infile)
 
@@ -75,11 +78,12 @@ class InventoryManager:
         })
         self.write()
 
+    #adds item to dict and updates document with dict
     def addItem(self, item):
         self.items.append(item)
         self.write()
 
-    #removes item with given name
+    #removes item with given name from dict and updates doc
     def removeItem(self, name):
         rebuild = []
         for item in self.items:
@@ -108,11 +112,13 @@ class InventoryManager:
                inCat.append(item) 
         return inCat
 
+    #returns subframe. used for drawing 2 layered effect.
     def getSubFrame(self, frameName):
         for item in self.items:
             if f"{frameName} subframe" == item.get("name"):
                 return item
 
+    #returns sum of parts in bike instance
     def getWeight(self):
         weight = 0
         bikeDict = self.bike.getDict()
