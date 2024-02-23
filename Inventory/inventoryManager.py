@@ -38,7 +38,6 @@ class Bike:
         
 #GUI class
 class InventoryManager:
-    jsonFilePath = "Inventory/inventory.json"
     itemFilePath = "Inventory/items.json"
 
     def __init__(self):
@@ -51,6 +50,8 @@ class InventoryManager:
         #sets up current bike object for current config
         self.bike = Bike()
 
+        self.money = 100
+
     #updates items dict with document containing all items and attributes
     def updateItems(self):
         with open(self.itemFilePath, "r") as infile:
@@ -58,7 +59,7 @@ class InventoryManager:
 
     #writes current content of self.items to json file
     def write(self):
-        with open(self.jsonFilePath, "w") as outfile:
+        with open(self.itemFilePath, "w") as outfile:
             outfile.write("[")
             for i, item in enumerate(self.items):
                 json.dump(item, outfile)

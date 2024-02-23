@@ -19,6 +19,7 @@ class BikeShop:
 
     LOWERBG_COLOR = (102, 57, 49)
     BUTTON_COLOR = (120, 120, 120)
+    LOCKED_BTN_COLOR = (90, 90, 90)
     FONT_COLOR = (0, 0, 0)
     BG_COLOR = (100, 100, 100)
 
@@ -36,19 +37,41 @@ class BikeShop:
                          ["hubs", "rims", "tires"], ["stem", "bar", "bar tape"]]
     NAV_STRINGS = ["MAIN MENU", "GO RACE!"]
 
+    #clipboard stuff
+    CLIPBOARD_RECT = (780, -80, 400, 300)
+    RATIO_TXT_RECTS = [
+        (860, 185, 100, 100), 
+        (1130, 185, 100, 100)
+    ]
+    CB_SLIDERS = [
+        Slider(Rect(790, 400, 480, 62), 0, 2.43, 3.87, 0),
+        Slider(Rect(790, 504, 480, 62), 0, -3.87, -2.43, 0)
+    ]
+    
+    #scale stuff
+    SCALE_RECT = (340, 7, 200, 200)
+    SCALE_TEXT_RECT = (396, 64, 100, 100)
+    
+    #purchase popup stuff
+    POPUP_SIZE = 400, 400
+
     #boolean control vars for branching menu state
     isOpen = [False, False, False, False, False]
+    popup = False
 
     buttons = []
     secondaryButtons = []
     tertiaryButtons = []
     navButtons = []
 
+    popupElements = []
+    renderedChainRingTexts = []
+    renderedScaleText = ""
+
     def __init__(self, screenSize):
         currentDir = os.path.dirname(__file__)
         self.resPath = os.path.join(currentDir, "res\\")
         self.screenSize = screenSize
-        self.buttons = []
 
         #set up lower stripe that acts as background for buttons
         lowerBgHeight = screenSize[1] // 5
@@ -56,30 +79,14 @@ class BikeShop:
 
         self.generateNavButtons()
         self.generatePrimaryButtons()
-
         self.inv = InventoryManager()
 
-        #set up sliders and clipboard elements
-        self.clipboardRect = (780, -80, 400, 300)
-        self.sliders = [
-            Slider(Rect(790, 400, 480, 62), 0, 2.43, 3.87, 0),
-            Slider(Rect(790, 504, 480, 62), 0, -3.87, -2.43, 0)
-        ]
-        self.chainRingTextRects = [
-            (860, 185, 100, 100), 
-            (1130, 185, 100, 100)
-        ]
         self.chainRingFont = pygame.font.Font(self.resPath+"joystix.otf", 40)
-        self.renderedChainRingTexts = []
-
-        #set up scale and scale elements
-        self.scaleRect = (340, 7, 200, 200)
-        self.scaleTextRect = (396, 64, 100, 100)
         self.scaleFont = pygame.font.Font(self.resPath+"joystix.otf", 23)
-        self.renderedScaleText = ""
 
     #draws all elements of class to backside (called each tick)
     def draw(self, pygame, screen, dTime):
+        #draws background
         screen.fill(self.BG_COLOR)
         bgImage = pygame.image.load(self.resPath + self.BG_PATH)
         bgImage = pygame.transform.scale(bgImage, (2500, 1406))
@@ -96,20 +103,20 @@ class BikeShop:
 
         #draws scale background to screen
         scaleImage = pygame.image.load(f"{self.resPath}shop elements\\scale.png")
-        screen.blit(scaleImage, self.scaleRect)
+        screen.blit(scaleImage, self.SCALE_RECT)
 
         #draws clipboard background to screen
         sliderLabelImage = pygame.image.load(f"{self.resPath}shop elements\\clipboard.png")
         sliderLabelImage = pygame.transform.scale(sliderLabelImage, (500, 666))
-        screen.blit(sliderLabelImage, self.clipboardRect)
+        screen.blit(sliderLabelImage, self.CLIPBOARD_RECT)
         
         #updates, then draws clipboard elements
-        self.updateClipboard(self.sliders)
+        self.updateClipboard(self.CB_SLIDERS)
         for i, renderedText in enumerate(self.renderedChainRingTexts):
-            screen.blit(renderedText, self.chainRingTextRects[i])
-        for slider in self.sliders:
+            screen.blit(renderedText, self.RATIO_TXT_RECTS[i])
+        for slider in self.CB_SLIDERS:
             slider.draw(pygame, screen)
-        screen.blit(self.renderedScaleText, self.scaleTextRect)
+        screen.blit(self.renderedScaleText, self.SCALE_TEXT_RECT)
 
         #draws nav buttons
         for button in self.navButtons:
@@ -117,17 +124,58 @@ class BikeShop:
 
         #draw lower bar buttons sit on
         pygame.draw.rect(screen, self.LOWERBG_COLOR, self.lowerBg)
-        #draws each button in list
         for button in self.buttons:
             button.draw(pygame, screen)
-        #draw sub buttons if state requires
+
+        #draw sub buttons if applicable
         for bool in self.isOpen:
             if bool:
                 for button in self.secondaryButtons:
                     button.draw(pygame, screen)
-        #draw sub-sub-buttons if nessecary
+
+        #draw tertiary buttons if nessecary
         for button in self.tertiaryButtons:
             button.draw(pygame, screen)
+
+    #updates button state control and does behaviour when passed a click
+    def buttonClickCheck(self, click):
+        #checks if nav buttons have been pressed
+        for button in self.navButtons:
+            if button.checkClicked(click):
+                return button.string
+
+        #if primary button clicked, reset + set state accordingly
+        #generate secondary buttons from starting pos of primary
+        for i, button in enumerate(self.buttons):
+            if button.checkClicked(click):
+                self.tertiaryButtons = []
+                if self.isOpen[i]:
+                    self.secondaryButtons = []
+                    self.isOpen = [False, False, False, False, False]
+                else:
+                    self.generateSecondaryButtons(i)
+                    self.isOpen = [False, False, False, False, False]
+                    self.isOpen[i] = True
+
+        #if secondary button clicked, generate tertiary buttons
+        #generation uses location of button clicked
+        if len(self.secondaryButtons) != 0:
+            for i, button in enumerate(self.secondaryButtons):
+                if button.checkClicked(click):
+                    self.tertiaryButtons = []
+                    self.generateTertiaryButtons(i)
+
+        #updates bike object in invmanager if tertiary button is clicked
+        #calls screen to update drawing of bike too
+        if len(self.tertiaryButtons) != 0:
+            for i, button in enumerate(self.tertiaryButtons):
+                if button.checkClicked(click):
+                    clickedPart = self.inv.getItem(button.string)
+                    self.inv.bike.setPart(clickedPart)
+                    if clickedPart.get("category") == "frame":
+                        test = self.inv.getSubFrame(button.string)
+                        self.inv.bike.setPart(self.inv.getSubFrame(button.string))
+                    self.tertiaryButtons = []
 
     #draws bike to screen
     def drawBikeVisualization(self, pygame, screen):
@@ -231,8 +279,12 @@ class BikeShop:
         if self.isOpen[4]: #if last button, go left
             buttonXDirection = -1 
 
-        #calculate position of -each button and put it into tertiaryButtons as a rect (foreach item in list in category)
+        #calculate position of each button and put it into tertiaryButtons as a rect (foreach item in list in category)
         for item in items:
+            if item.get("unlocked") == "False":
+                buttonColor = self.LOCKED_BTN_COLOR
+            else:
+                buttonColor = self.BUTTON_COLOR
             buttonRect = Rect(
                 self.secondaryButtons[ind].rect[0] + self.PRIMARY_BUTTON_SIZE[0] + self.BUTTON_SPACING,
                 self.secondaryButtons[ind].rect[1] + buttonOffset,
@@ -243,48 +295,11 @@ class BikeShop:
                 buttonRect[0] -= 2 * (self.PRIMARY_BUTTON_SIZE[0] + self.BUTTON_SPACING)
             self.tertiaryButtons.append(Button(
                 buttonRect, self.FONT_SIZE, self.FONT_SPACING,
-                self.BUTTON_COLOR, self.FONT_COLOR, item.get("name")))
+                buttonColor, self.FONT_COLOR, item.get("name")))
             if buttonYDirection == 1:
                 buttonOffset += self.SECONDARY_BUTTON_HEIGHT + self.BUTTON_SPACING
             else:
                 buttonOffset -= self.SECONDARY_BUTTON_HEIGHT + self.BUTTON_SPACING
-
-    #updates button state control and does behaviour when passed a click
-    def buttonClickCheck(self, click):
-        #checks if nav buttons have been pressed
-        for button in self.navButtons:
-            if button.checkClicked(click):
-                return button.string
-
-        #if primary button clicked, reset + set state accordingly
-        #generate secondary buttons from starting pos of primary
-        for i, button in enumerate(self.buttons):
-            if button.checkClicked(click):
-                self.tertiaryButtons = []
-                if self.isOpen[i]:
-                    self.secondaryButtons = []
-                    self.isOpen = [False, False, False, False, False]
-                else:
-                    self.generateSecondaryButtons(i)
-                    self.isOpen = [False, False, False, False, False]
-                    self.isOpen[i] = True
-
-        #if secondary button clicked, generate tertiary buttons
-        #generation uses location of button clicked
-        if len(self.secondaryButtons) != 0:
-            for i, button in enumerate(self.secondaryButtons):
-                if button.checkClicked(click):
-                    self.tertiaryButtons = []
-                    self.generateTertiaryButtons(i)
-
-        #updates bike object in invmanager if tertiary button is clicked
-        #calls screen to update drawing of bike too
-        if len(self.tertiaryButtons) != 0:
-            for i, button in enumerate(self.tertiaryButtons):
-                if button.checkClicked(click):
-                    clickedPart = self.inv.getItem(button.string)
-                    self.inv.bike.setPart(clickedPart)
-                    if clickedPart.get("category") == "frame":
-                        test = self.inv.getSubFrame(button.string)
-                        self.inv.bike.setPart(self.inv.getSubFrame(button.string))
-                    self.tertiaryButtons = []
+    
+    def generatePopupElements(self):
+        self.popupElements.append()
