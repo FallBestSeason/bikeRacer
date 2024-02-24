@@ -20,7 +20,7 @@ class BikeShop:
 
     LOWERBG_COLOR = (102, 57, 49)
     BUTTON_COLOR = (120, 120, 120)
-    LOCKED_BTN_COLOR = (90, 90, 90)
+    LOCKED_BTN_COLOR = (85, 85, 85)
     FONT_COLOR = (0, 0, 0)
     BG_COLOR = (100, 100, 100)
 
@@ -32,6 +32,7 @@ class BikeShop:
         "\\shop elements\\wheelsLabel.png",
         "\\shop elements\\cockpitLabel.png",
     ]
+    POPUP_PATH = "\\shop elements\\popupBackground.png"
     BUTTON_STRINGS = ["frame & gearing", "saddle", "drivetrain", "wheels", "cockpit"]
     SECONDARY_OPTIONS = [["frame", "front gearing", "rear gearing"], ["saddle", "seatpost"], 
                          ["crankset", "chainring", "chain", "pedals"], 
@@ -146,8 +147,11 @@ class BikeShop:
         self.moneyBox.draw(pygame, screen)
 
         #draw popup elements if needed
-        for element in self.popupElements:
-            element.draw(pygame, screen)
+        if self.popupItem != "":
+            popupBGImage = pygame.image.load(f"{self.resPath}{self.POPUP_PATH}")
+            screen.blit(popupBGImage, (self.screenSize[0] // 2 - 200, self.screenSize[1] // 2 - 200, 400, 400))
+            for element in self.popupElements:
+                element.draw(pygame, screen)  
 
     #updates button state control and does behaviour when passed a click
     def buttonClickCheck(self, click):
@@ -168,11 +172,12 @@ class BikeShop:
                             if selectedPart.get("category") == "frame":
                                 self.inv.bike.setPart(self.inv.getSubFrame(self.popupItem))
                             self.inv.updateItem(self.popupItem, "unlocked", "True")
-                            self.popupElements = []
-                    else:
-                        self.popupElements = []
+                    self.tertiaryButtons = []
+                    self.secondaryButtons = []
+                    self.popupElements = []
+                    self.popupItem = ""
             except:
-                pass
+                print("you know the spot")
 
         #if primary button clicked, reset + set state accordingly
         #generate secondary buttons from starting pos of primary
@@ -207,7 +212,10 @@ class BikeShop:
                             self.inv.bike.setPart(self.inv.getSubFrame(button.string))
                         self.tertiaryButtons = []
                     else:
-                        self.generatePopupElements(clickedPart.get("name"), clickedPart.get("cost"))           
+                        self.generatePopupElements(
+                            clickedPart.get("name"), 
+                            clickedPart.get("cost")
+                        )           
 
     #draws bike to screen
     def drawBikeVisualization(self, pygame, screen):
@@ -245,21 +253,40 @@ class BikeShop:
         sliders[1].update(-ratio)
 
         #update text in chainring blanks
-        self.renderedChainRingTexts.append(self.chainRingFont.render(str(int(currentTeeth[0])), True, (0, 0, 0)))
-        self.renderedChainRingTexts.append(self.chainRingFont.render(str(int(currentTeeth[1])), True, (0, 0, 0)))
+        self.renderedChainRingTexts.append(
+            self.chainRingFont.render(str(int(currentTeeth[0])), True, (0, 0, 0))
+        )
+        self.renderedChainRingTexts.append(
+            self.chainRingFont.render(str(int(currentTeeth[1])), True, (0, 0, 0))
+        )
 
     #populates array of nav button objects
     def generateNavButtons(self):
         backButtonRect = (0, 0, self.NAV_BUTTON_SIZE[0], self.NAV_BUTTON_SIZE[1])
         raceButtonRect = (
             self.screenSize[0] - self.NAV_BUTTON_SIZE[0], 0, 
-            self.NAV_BUTTON_SIZE[0], self.NAV_BUTTON_SIZE[1])
-        self.navButtons.append(Button(
-                backButtonRect, self.FONT_SIZE, self.FONT_SPACING,
-                self.BUTTON_COLOR, self.FONT_COLOR, self.NAV_STRINGS[0]))
-        self.navButtons.append(Button(
-                raceButtonRect, self.FONT_SIZE, self.FONT_SPACING,
-                self.BUTTON_COLOR, self.FONT_COLOR, self.NAV_STRINGS[1]))
+            self.NAV_BUTTON_SIZE[0], self.NAV_BUTTON_SIZE[1]
+        )
+        self.navButtons.append(
+            Button(
+                backButtonRect, 
+                self.FONT_SIZE, 
+                self.FONT_SPACING,
+                self.BUTTON_COLOR, 
+                self.FONT_COLOR, 
+                self.NAV_STRINGS[0]
+            )
+        )
+        self.navButtons.append(
+            Button(
+                raceButtonRect, 
+                self.FONT_SIZE, 
+                self.FONT_SPACING,
+                self.BUTTON_COLOR, 
+                self.FONT_COLOR, 
+                self.NAV_STRINGS[1]
+            )
+        )
 
     #generates array of primary buttons
     def generatePrimaryButtons(self):
@@ -311,7 +338,8 @@ class BikeShop:
         if self.isOpen[4]: #if last button, go left
             buttonXDirection = -1 
 
-        #calculate position of each button and put it into tertiaryButtons as a rect (foreach item in list in category)
+        #calculate position of each button and put it into 
+        #tertiaryButtons as a rect (foreach item in list in category)
         for item in items:
             if item.get("unlocked") == "False":
                 buttonColor = self.LOCKED_BTN_COLOR
@@ -366,7 +394,7 @@ class BikeShop:
         self.popupElements.append(
             Button(
                 (
-                    offset[0] - popupSize[0] // 2 - 50, 
+                    offset[0] - popupSize[0] // 2 + 10, 
                     offset[1] - popupSize[1] // 2 + 100, 
                     80,
                     50
@@ -381,7 +409,7 @@ class BikeShop:
         self.popupElements.append(
             Button(
                 (
-                    offset[0] - popupSize[0] // 2 + 50, 
+                    offset[0] - popupSize[0] // 2 + 110, 
                     offset[1] - popupSize[1] // 2 + 100, 
                     80,
                     50

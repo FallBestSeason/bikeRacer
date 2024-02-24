@@ -57,6 +57,7 @@ class InventoryManager:
         with open(self.itemFilePath, "r") as infile:
             self.items = json.load(infile)
 
+    #updates items dict- element with name, at category.
     def updateItem(self, name, cat, value):
         for i, item in enumerate(self.items):
             if item.get("name") == name:
