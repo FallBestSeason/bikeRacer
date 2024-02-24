@@ -10,7 +10,8 @@ class TextBox:
     def __init__(self, rect, text, fontSize, fontPath):
         self.rect = rect
         self.text = text
-        self.fontSize = fontPath
+        self.fontSize = fontSize
+        self.fontPath = fontPath
 
         self.textRect = (rect[0] + self.FONT_SPACING,
                 rect[1] + (rect[3] % fontSize) / 2,
@@ -19,7 +20,14 @@ class TextBox:
 
         resPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "res\\")
         font = pygame.font.Font(resPath+fontPath, fontSize)
-        self.renderedText = buttonFont.render(text, True, self.FONT_COLOR)
+        self.renderedText = font.render(text, True, self.FONT_COLOR)
 
     def draw(self, pygame, screen):
         screen.blit(self.renderedText, self.textRect[:2])
+
+    def updateText(self, text):
+        self.text = text
+        resPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "res\\")
+        font = pygame.font.Font(resPath+self.fontPath, self.fontSize)
+        self.renderedText = font.render(text, True, self.FONT_COLOR)
+        

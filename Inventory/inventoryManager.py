@@ -50,12 +50,19 @@ class InventoryManager:
         #sets up current bike object for current config
         self.bike = Bike()
 
-        self.money = 100
+        self.money = 1000
 
     #updates items dict with document containing all items and attributes
     def updateItems(self):
         with open(self.itemFilePath, "r") as infile:
             self.items = json.load(infile)
+
+    def updateItem(self, name, cat, value):
+        for i, item in enumerate(self.items):
+            if item.get("name") == name:
+                print(self.items[i])
+                self.items[i][cat] = value
+                self.write()
 
     #writes current content of self.items to json file
     def write(self):
@@ -68,16 +75,6 @@ class InventoryManager:
             outfile.write("]")
         #always updates items dict to match file
         self.updateItems()
-
-    #appends item to self.items, writes file with items
-    def addItem(self, cat, name, weight, path):
-        self.items.append({
-            "category": cat,
-            "name": name,
-            "weight": weight,
-            "filePath": path
-        })
-        self.write()
 
     #adds item to dict and updates document with dict
     def addItem(self, item):

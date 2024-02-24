@@ -1,8 +1,0 @@
-removed inventory.json and refactored inventorymanager to use only one file
-added unlocked attrib to each item
-made buttons darker in shop if item isn't unloccked
-added cost attrib to each item
-refactored hard coded scale and clipboard values into constants
-added textbox module to instance folder
-refactored button to use textbox class
-cleaned up button class

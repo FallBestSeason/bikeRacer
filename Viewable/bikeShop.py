@@ -6,6 +6,7 @@ sys.path.append(current_dir)
 from button import Button
 from imageButton import ImageButton
 from slider import Slider
+from textbox import TextBox
 from inventory.inventoryManager import InventoryManager
 
 class BikeShop:
@@ -47,13 +48,13 @@ class BikeShop:
         Slider(Rect(790, 400, 480, 62), 0, 2.43, 3.87, 0),
         Slider(Rect(790, 504, 480, 62), 0, -3.87, -2.43, 0)
     ]
-    
     #scale stuff
     SCALE_RECT = (340, 7, 200, 200)
     SCALE_TEXT_RECT = (396, 64, 100, 100)
-    
     #purchase popup stuff
     POPUP_SIZE = 400, 400
+    #money indicator things
+    MONEY_RECT = (0, 50, 100, 20)
 
     #boolean control vars for branching menu state
     isOpen = [False, False, False, False, False]
@@ -65,6 +66,7 @@ class BikeShop:
     navButtons = []
 
     popupElements = []
+    popupItem = ""
     renderedChainRingTexts = []
     renderedScaleText = ""
 
@@ -83,6 +85,8 @@ class BikeShop:
 
         self.chainRingFont = pygame.font.Font(self.resPath+"joystix.otf", 40)
         self.scaleFont = pygame.font.Font(self.resPath+"joystix.otf", 23)
+
+        self.moneyBox = TextBox(self.MONEY_RECT, f"balance: ${self.inv.money}", 20, "joystix.otf")
 
     #draws all elements of class to backside (called each tick)
     def draw(self, pygame, screen, dTime):
@@ -137,12 +141,38 @@ class BikeShop:
         for button in self.tertiaryButtons:
             button.draw(pygame, screen)
 
+        #updates, draws money indicator 
+        self.moneyBox.updateText(f"balance: ${self.inv.money}")
+        self.moneyBox.draw(pygame, screen)
+
+        #draw popup elements if needed
+        for element in self.popupElements:
+            element.draw(pygame, screen)
+
     #updates button state control and does behaviour when passed a click
     def buttonClickCheck(self, click):
         #checks if nav buttons have been pressed
         for button in self.navButtons:
             if button.checkClicked(click):
                 return button.string
+
+        #checks if popup buttons have been pressed
+        for element in self.popupElements:
+            try:
+                if element.checkClicked(click):
+                    if element.string == "YES":
+                        selectedPart = self.inv.getItem(self.popupItem)
+                        if self.inv.money >= selectedPart.get("cost"):
+                            self.inv.money -= selectedPart.get("cost")
+                            self.inv.bike.setPart(selectedPart)
+                            if selectedPart.get("category") == "frame":
+                                self.inv.bike.setPart(self.inv.getSubFrame(self.popupItem))
+                            self.inv.updateItem(self.popupItem, "unlocked", "True")
+                            self.popupElements = []
+                    else:
+                        self.popupElements = []
+            except:
+                pass
 
         #if primary button clicked, reset + set state accordingly
         #generate secondary buttons from starting pos of primary
@@ -171,11 +201,13 @@ class BikeShop:
             for i, button in enumerate(self.tertiaryButtons):
                 if button.checkClicked(click):
                     clickedPart = self.inv.getItem(button.string)
-                    self.inv.bike.setPart(clickedPart)
-                    if clickedPart.get("category") == "frame":
-                        test = self.inv.getSubFrame(button.string)
-                        self.inv.bike.setPart(self.inv.getSubFrame(button.string))
-                    self.tertiaryButtons = []
+                    if clickedPart.get("unlocked") == "True":
+                        self.inv.bike.setPart(clickedPart)
+                        if clickedPart.get("category") == "frame":
+                            self.inv.bike.setPart(self.inv.getSubFrame(button.string))
+                        self.tertiaryButtons = []
+                    else:
+                        self.generatePopupElements(clickedPart.get("name"), clickedPart.get("cost"))           
 
     #draws bike to screen
     def drawBikeVisualization(self, pygame, screen):
@@ -301,5 +333,63 @@ class BikeShop:
             else:
                 buttonOffset -= self.SECONDARY_BUTTON_HEIGHT + self.BUTTON_SPACING
     
-    def generatePopupElements(self):
-        self.popupElements.append()
+    def generatePopupElements(self, itemName, amount):
+        self.popupItem = itemName
+        popupSize = (400, 400)
+        offset = (self.screenSize[0] // 2, self.screenSize[1] // 2)
+        self.popupElements.append(
+            TextBox(
+                (
+                    offset[0] - popupSize[0] // 2, 
+                    offset[1] - popupSize[1] // 2, 
+                    200,
+                    100
+                ), 
+            "Purchase",
+            20,
+            "joystix.otf"
+            )
+        )
+        self.popupElements.append(
+            TextBox(
+                (
+                    offset[0] - popupSize[0] // 2, 
+                    offset[1] - popupSize[1] // 2 + 50, 
+                    200,
+                    100
+                ), 
+            f"{itemName} for {amount}?",
+            20,
+            "joystix.otf"
+            )
+        )
+        self.popupElements.append(
+            Button(
+                (
+                    offset[0] - popupSize[0] // 2 - 50, 
+                    offset[1] - popupSize[1] // 2 + 100, 
+                    80,
+                    50
+                ),
+                15, 
+                10, 
+                self.BUTTON_COLOR,
+                self.FONT_COLOR,
+                "YES"
+            )
+        )
+        self.popupElements.append(
+            Button(
+                (
+                    offset[0] - popupSize[0] // 2 + 50, 
+                    offset[1] - popupSize[1] // 2 + 100, 
+                    80,
+                    50
+                ),
+                15, 
+                10, 
+                self.BUTTON_COLOR,
+                self.FONT_COLOR,
+                "NO"
+            )
+        )
