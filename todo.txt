@@ -4,58 +4,19 @@ todo:
 
 credits
 
-figure out atribute system and how it will relate to races
-    display attributes of current build on right of screen in bikeshop
-    rough idea: 
-        weight of parts affects skids / turn speed
-            lightweight builds turn in and out really fast and focus on grip
-            heavy builds get more speed boost from skids (?) 
-            wheels have biggest effects
-            smallest difference available should be noticable but BARELY
-            largest difference available should be useable, and should be more
-            desireable for high speed cornering
-        cog ct and chainring ct affect acceleration and top speed
-            directly inversely proportional in some way
-
-figure out system to purchase non-inventory items
-    maybe change bikeshop to populate from items instead of from inventory?
-    clicking on non-unlocked item opens a pop up to purchase it
-    you can't see the stats until purchased ofc, encourage a mf to buy everything
-
-could mainmenu and bike shop share an inference module?
-    what is cost benefit
-    they need hella cleaning up regardless
-
-bikeshop cleanup, comments need redone
-    addbutton method? lots of repeat calls to vars and similar math
-    also just a big mess, maybe could use abstracted into smaller parts
-    as part of shared inference module upgrade?
-
 fix god awful optimization between inventorymanager and bikeshop,
 reads through every item in players inventory every frame
 will require restructuring in bikeshop and rewrite of acess methods
 in inventoryManager and bike classes
 
 implement dirty squares in gui screens?
-assuming it will be needed for game screens <- lol
-implement dirty squares everywhere
 
 test + fix screen size reactivity
+you cant make me, what if it's 1280x720 in an artistic, comment on the early internet period kinda way
 
-main menu kinda just need a rewrite lmao
+rewrite of bikeshop to get rid of lots of hard coded pixel values
 
-figure out: money and cost of items, add element to items.json?
-    crazy idea: multiple named shop locations that are unlocked
-
-RACE TODO:
-
-akira slide particles on skid
-
-speed boost for going into or leaving skid? for balance?
-    fine tune base values for feel
-    UI
-
-get some sort of hitbox that represents different areas of the map
+update readme
 
 customizable mechanics:
 not meant to be realistic, meant to make building fun
@@ -65,8 +26,14 @@ heavier components will make the bike skid for longer (decelrate less?)
 goal: large noticable difference in handling between heaviest and lightest bike, 
    should be able to feel the difference in one or two parts worth of upgrades
 
+feature completeness:
 player sprites change based on bike build
-
-rewrite of bikeshop to get rid of lots of hard coded pixel values
-
-REWRITE def getWeight(self): IN INVENTORYMANAGER
+riding attributes updated by build
+particle system working correctly
+particles or some kind of feedback for higher speed / accel after skid
+grass collisions
+laps / checkpoints
+timer
+other maps
+more items
+raceinstance MUST have dirty square optimization

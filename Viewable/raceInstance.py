@@ -199,7 +199,6 @@ class RaceInstance:
 
         #if we are skidding, update sprite and player movement
         if self.skidding:
-            #todo place xy not bassed on player center
             self.particleNodes.append(ParticleNode((self.playerRect.center[0] + self.nodeOffset[0], self.playerRect.center[1] + self.nodeOffset[1]), self.camera, self.playerRotation, 1))
             self.playerSpeed += self.SKID_DECEL
             #change sprite to skid
@@ -233,9 +232,11 @@ class RaceInstance:
         self.camera = self.camera[0] + self.cameraDelta[0], self.camera[1] + self.cameraDelta[1]
 
         #set up player rect to be centered on screen
-        self.playerRect = Rect((self.screenSize[0] // 2) - (self.playerSprite.get_rect().left // 2),
-                      (self.screenSize[1] // 2) - (self.playerSprite.get_rect().top // 2),
-                       self.playerSprite.get_rect().width, self.playerSprite.get_rect().height)
+        self.playerRect = Rect(
+            (self.screenSize[0] // 2) - (self.playerSprite.get_rect().left // 2),
+            (self.screenSize[1] // 2) - (self.playerSprite.get_rect().top // 2),
+            self.playerSprite.get_rect().width, self.playerSprite.get_rect().height
+        )
 
 def getCameraDelta(angle, length):
     #get angle sanitized
