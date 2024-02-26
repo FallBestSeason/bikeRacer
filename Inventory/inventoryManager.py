@@ -39,31 +39,28 @@ class Bike:
 #GUI class
 class InventoryManager:
     itemFilePath = "Inventory/items.json"
+    moneyFilePath = "Inventory/money.json"
 
     def __init__(self):
         #pulls items from inventory json file
-        self.updateItems()
+        self.read()
 
-        with open(self.itemFilePath, "r") as infile:
-            self.allItems = json.load(infile)
-
-        #sets up current bike object for current config
         self.bike = Bike()
 
-        self.money = 1000
+        self.readMoney()
 
-    #updates items dict with document containing all items and attributes
-    def updateItems(self):
+    def readMoney(self):
+        with open(self.moneyFilePath, "r") as infile:
+            self.money = json.load(infile)
+
+    def writeMoney(self):
+        with open(self.moneyFilePath, "w") as outfile:
+            json.dump(self.money, outfile)
+
+    #reads items dict from file
+    def read(self):
         with open(self.itemFilePath, "r") as infile:
             self.items = json.load(infile)
-
-    #updates items dict- element with name, at category.
-    def updateItem(self, name, cat, value):
-        for i, item in enumerate(self.items):
-            if item.get("name") == name:
-                print(self.items[i])
-                self.items[i][cat] = value
-                self.write()
 
     #writes current content of self.items to json file
     def write(self):
@@ -74,15 +71,28 @@ class InventoryManager:
                 if i < len(self.items) - 1:
                     outfile.write(",\n")
             outfile.write("]")
-        #always updates items dict to match file
-        self.updateItems()
 
-    #adds item to dict and updates document with dict
+    def updateMoney(self, amount):
+        self.money["moneyAmount"] += amount
+        self.writeMoney()
+
+    def getMoney(self):
+        return self.money["moneyAmount"]
+
+    #updates items dict- element with name, at category.
+    def updateItem(self, name, cat, value):
+        for i, item in enumerate(self.items):
+            if item.get("name") == name:
+                print(self.items[i])
+                self.items[i][cat] = value
+                self.write()
+
+    #adds item to dict, updates file
     def addItem(self, item):
         self.items.append(item)
         self.write()
 
-    #removes item with given name from dict and updates doc
+    #removes item with given name from dict, updates file
     def removeItem(self, name):
         rebuild = []
         for item in self.items:
@@ -91,19 +101,13 @@ class InventoryManager:
         self.items = rebuild
         self.write()
 
-    #returns given item within inventory
+    #returns named item
     def getItem(self, name):
         for item in self.items:
             if item.get("name") == name:
                 return item
 
-    #returns item reference from list of all items given name
-    def getAllItemByName(self, name):
-        for item in self.allItems:
-            if item.get("name") == name:
-                return item
-
-    #returns list of dict entries containing same category as passed in
+    #returns list of dict entries w matching category
     def getAllInCat(self, cat):
         inCat = []
         for item in self.items:
@@ -117,7 +121,7 @@ class InventoryManager:
             if f"{frameName} subframe" == item.get("name"):
                 return item
 
-    #returns sum of parts in bike instance
+    #returns sum of weight of parts in bike instance, roudned to 2 decimals
     def getWeight(self):
         weight = 0
         bikeDict = self.bike.getDict()

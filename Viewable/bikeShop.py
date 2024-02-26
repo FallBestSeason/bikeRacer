@@ -89,7 +89,7 @@ class BikeShop:
         self.chainRingFont = pygame.font.Font(self.resPath+"joystix.otf", 40)
         self.scaleFont = pygame.font.Font(self.resPath+"joystix.otf", 23)
 
-        self.moneyBox = TextBox(self.MONEY_RECT, f"balance: ${self.inv.money}", 20, "joystix.otf")
+        self.moneyBox = TextBox(self.MONEY_RECT, f"balance: ${self.inv.getMoney()}", 20, "joystix.otf")
 
     #draws all elements of class to backside (called each tick)
     def draw(self, pygame, screen, dTime):
@@ -145,7 +145,7 @@ class BikeShop:
             button.draw(pygame, screen)
 
         #updates, draws money indicator 
-        self.moneyBox.updateText(f"balance: ${self.inv.money}")
+        self.moneyBox.updateText(f"balance: ${self.inv.getMoney()}")
         self.moneyBox.draw(pygame, screen)
 
         #draw popup elements if needed
@@ -168,8 +168,8 @@ class BikeShop:
                 if element.checkClicked(click):
                     if element.string == "YES":
                         selectedPart = self.inv.getItem(self.popupItem)
-                        if self.inv.money >= selectedPart.get("cost"):
-                            self.inv.money -= selectedPart.get("cost")
+                        if self.inv.getMoney() >= selectedPart.get("cost"):
+                            self.inv.updateMoney(-selectedPart.get("cost"))
                             self.inv.bike.setPart(selectedPart)
                             if selectedPart.get("category") == "frame":
                                 self.inv.bike.setPart(self.inv.getSubFrame(self.popupItem))
