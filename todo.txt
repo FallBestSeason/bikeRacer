@@ -34,6 +34,10 @@ particles or some kind of feedback for higher speed / accel after skid
 grass collisions
 laps / checkpoints
 timer
+points system for skids
+rating based on those?
 other maps
+map selector screen
+player sprite rendered on map selector screen
 more items
 raceinstance MUST have dirty square optimization

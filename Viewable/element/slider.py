@@ -8,9 +8,9 @@ sys.path.append(current_dir)
 #used to represent slider in GUI class
 class Slider:
     #colors
-    BG_COLOR = (120, 120, 120)
-    FG_COLOR = (80, 80, 80)
-    FILL_COLOR = (0, 80, 100)
+    BG_COLOR = (80, 80, 80)
+    FG_COLOR = (120, 120, 120)
+    FILL_COLOR = (68, 106, 175)
 
     def __init__(self, bgRect, padding, minVal, maxVal, init):
         self.bgRect = bgRect

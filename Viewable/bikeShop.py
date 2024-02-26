@@ -72,6 +72,8 @@ class BikeShop:
     renderedScaleText = ""
 
     def __init__(self, screenSize):
+        self.buttons = []
+
         currentDir = os.path.dirname(__file__)
         self.resPath = os.path.join(currentDir, "res\\")
         self.screenSize = screenSize
@@ -362,6 +364,7 @@ class BikeShop:
                 buttonOffset -= self.SECONDARY_BUTTON_HEIGHT + self.BUTTON_SPACING
     
     def generatePopupElements(self, itemName, amount):
+        self.popupElements = []
         self.popupItem = itemName
         popupSize = (400, 400)
         offset = (self.screenSize[0] // 2, self.screenSize[1] // 2)
