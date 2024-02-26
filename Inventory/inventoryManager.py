@@ -7,34 +7,29 @@ sys.path.append(current_dir)
 
 #instance class, represents one bike object
 class Bike:
-    #category and name of items in default bike
-    bikeItems = {
-        "subframe": "big block subframe",
-        "stem": "oem stem",
-        "bar": "flat",
-        "seatpost": "oem post",
-        "saddle": "powercomp",
-        "hubs": "formula track",
-        "rims": "alex DH19",
-        "tires": "gatorskins",
-        "frame": "big block",
-        "chainring": "oem ring",
-        "chain": "1/8th\" chain",
-        "crankset": "oem cranks",
-        "pedals": "flats",
-        "front gearing": "46",
-        "rear gearing": "17"
-    }
+    path = "inventory/bike.json"
+
+    def __init__(self):
+        self.read()
+
+    def read(self):
+        with open(self.path, "r") as infile:
+            self.list = json.load(infile)
+
+    def write(self):
+        with open(self.path, "w") as outfile:
+            json.dump(self.list, outfile)
 
     def setPart(self, part):
-        self.bikeItems[part.get("category")] = part.get("name")
+        self.list[part.get("category")] = part.get("name")
+        self.write()
 
     #takes a category and returns the current part
     def getPartName(self, cat):
-        return self.bikeItems[cat]
+        return self.list[cat]
     
     def getDict(self):
-        return self.bikeItems
+        return self.list
         
 #GUI class
 class InventoryManager:
