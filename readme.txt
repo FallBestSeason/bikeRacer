@@ -34,4 +34,4 @@ I am making this game to get better at coding.
 The goal of this project is to prove that I can function as a full-stack dev on
 a framework and language I know nothing about. 
 
-all art is made by me in pixelorama, a free open-source editor written in godot.
+all art is made by me in pixelorama, a free open-source editor written in godot. I am not good at UI so please look at the pretty code instead :)
