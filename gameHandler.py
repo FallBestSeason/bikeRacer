@@ -1,3 +1,7 @@
+import os, sys
+current_dir = os.path.dirname(__file__)
+sys.path.append(current_dir)
+
 from viewable.mainMenu import MainMenu
 from viewable.bikeShop import BikeShop
 from viewable.raceInstance import RaceInstance
