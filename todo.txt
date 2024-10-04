@@ -2,27 +2,28 @@ current:
 
 todo:
 
+particles are emitting on the wrong quadrant / hemisphere of the horozontal axis depending on the directon of the character.
+
 credits
 
 fix god awful optimization between inventorymanager and bikeshop,
 reads through every item in players inventory every frame
-will require restructuring in bikeshop and rewrite of acess methods
-in inventoryManager and bike classes
+will require restructuring in bikeshop and rewrite of acess methods in inventoryManager and bike classes
+- very hard
 
-implement dirty squares in gui screens?
+implement dirty squares in gui screens
+- hard
 
 test + fix screen size reactivity
-you cant make me, what if it's 1280x720 in an artistic, comment on the early internet period kinda way
+- you cant make me, what if it's 1280x720 in an artistic, comment on the early internet period kinda way
 
 rewrite of bikeshop to get rid of lots of hard coded pixel values
-
-update readme
 
 customizable mechanics:
 not meant to be realistic, meant to make building fun
 front tooth count and rear tooth cound will affect acceleration and top speed
 lighter components will make the bike lean side to side faster
-heavier components will make the bike skid for longer (decelrate less?)
+heavier components will make the bike skid for longer (decellerate less?)
 goal: large noticable difference in handling between heaviest and lightest bike, 
    should be able to feel the difference in one or two parts worth of upgrades
 
@@ -30,14 +31,11 @@ feature completeness:
 player sprites change based on bike build
 riding attributes updated by build
 particle system working correctly
-particles or some kind of feedback for higher speed / accel after skid
+particle colors or some kind of feedback for higher speed / accel after skid
 grass collisions
 laps / checkpoints
 timer
-points system for skids
-rating based on those?
-other maps
 map selector screen
-player sprite rendered on map selector screen
+player sprite rendered in shop so you can see what it will look like in game
 more items
 raceinstance MUST have dirty square optimization
