@@ -1,8 +1,15 @@
 current:
 
+refactor of raceinstance for better handling / performance (not dirty squares yet)
+rewrite of particle physics
+
 todo:
 
-particles are emitting on the wrong quadrant / hemisphere of the horozontal axis depending on the directon of the character.
+skids bias right
+sprite rotates 90 deg for skids but the skid itself feels better at about 60 deg
+
+particles are emitting either to the left or right, the entire calculation needs to be refactored to work at any angle
+we seem to be making a ton of particle nodes instead of asking for a lot of particles
 
 credits
 
@@ -39,3 +46,7 @@ map selector screen
 player sprite rendered in shop so you can see what it will look like in game
 more items
 raceinstance MUST have dirty square optimization
+cooldown between skids / max speed to enter skid
+
+feature ideas:
+player customization

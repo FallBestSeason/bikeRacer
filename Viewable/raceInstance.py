@@ -4,30 +4,31 @@ import math
 import os, sys
 current_dir = os.path.dirname(__file__)
 sys.path.append(current_dir)
-from particle import ParticleNode
+from element.particle import ParticleNode
 from inventory.inventoryManager import InventoryManager
 
 class RaceInstance:
-    #constants for UI stuff
+    #UI element toggle
     DEBUG_ENABLED = True
 
-    #constants for race stuff
+    #Skid behaviour
     SKID_BOOST_TIME = 30
     SKID_BOOST_MAX = 12
     SKID_BOOST_ACCEL = 0.4
-    #max speed and accel for player
+    #player character behaviour
     PLAYER_SPEED_MAX = 10
     PLAYER_ACCELERATION = 0.1
     PLAYER_DECELERATION = -0.05
-    SKID_DECEL = -0.03
-    #rate at which playerLeanAmount is changed
-    PLAYER_LEAN_DELTA = 4.5
+    SKID_DECEL = -0.025
+    #player leaning behaviour
+    #lean delta is essentially the speed of lean
+    PLAYER_LEAN_DELTA = 4.0
     SMALL_LEAN_RANGE = (25, 75)
     LARGE_LEAN_RANGE = (75, 125)
     #offset amounts for rotating player
     PLAYER_SMALL_DELTA_ROTATION = 1
     PLAYER_LARGE_DELTA_ROTATION = 1.5
-    PLAYER_SKID_ROTATION = 90
+    PLAYER_SKID_ROTATION = 60
     #paths for player sprites
     PLAYER_SPRITE_PATH_CENTER = "\\player\\player0.png"
     PLAYER_SPRITE_PATH_SMALL = "\\player\\player1.png"
@@ -120,6 +121,7 @@ class RaceInstance:
         #draw background to screen
         screen.blit(self.bgImage, self.bgRect)
 
+        """
         #draw particles to screen
         drawnNodes = []
         for node in self.particleNodes:
@@ -127,6 +129,7 @@ class RaceInstance:
                 drawnNodes.append(node)
                 node.draw(screen, self.camera)
         self.particleNodes = drawnNodes
+        """
 
         #draw player to screen
         screen.blit(self.playerSprite, self.playerRect)
