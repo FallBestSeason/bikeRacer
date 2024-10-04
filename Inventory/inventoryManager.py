@@ -5,7 +5,10 @@ import os, sys
 current_dir = os.path.dirname(__file__)
 sys.path.append(current_dir)
 
-#instance class, represents one bike object
+#this file manages the backend of the game
+#handles user money, items, unlocks, etc by interacting with json files
+
+#instance class, represents one bike object made up of many parts
 class Bike:
     path = "inventory/bike.json"
 
@@ -39,25 +42,25 @@ class InventoryManager:
     def __init__(self):
         #pulls items from inventory json file
         self.read()
-
         self.bike = Bike()
-
         self.readMoney()
 
+    #reads player's current money from disk
     def readMoney(self):
         with open(self.moneyFilePath, "r") as infile:
             self.money = json.load(infile)
 
+    #updates player's current money on disk
     def writeMoney(self):
         with open(self.moneyFilePath, "w") as outfile:
             json.dump(self.money, outfile)
 
-    #reads items dict from file
+    #reads items dict from disk
     def read(self):
         with open(self.itemFilePath, "r") as infile:
             self.items = json.load(infile)
 
-    #writes current content of self.items to json file
+    #writes current content of self.items to disk
     def write(self):
         with open(self.itemFilePath, "w") as outfile:
             outfile.write("[")
@@ -67,14 +70,18 @@ class InventoryManager:
                     outfile.write(",\n")
             outfile.write("]")
 
+    #wrapper to update money easily from other classes
     def updateMoney(self, amount):
         self.money["moneyAmount"] += amount
         self.writeMoney()
 
+    #wrapper to read money easily from other classes
+    #! does not read player's money from disk
     def getMoney(self):
         return self.money["moneyAmount"]
 
     #updates items dict- element with name, at category.
+    #changes the selected item on the bike
     def updateItem(self, name, cat, value):
         for i, item in enumerate(self.items):
             if item.get("name") == name:
@@ -83,11 +90,14 @@ class InventoryManager:
                 self.write()
 
     #adds item to dict, updates file
+    #used when the bike does not already have an item in a given slot,
+    #this should only be during setup
     def addItem(self, item):
         self.items.append(item)
         self.write()
 
     #removes item with given name from dict, updates file
+    #removes an item from the bike
     def removeItem(self, name):
         rebuild = []
         for item in self.items:
@@ -116,7 +126,7 @@ class InventoryManager:
             if f"{frameName} subframe" == item.get("name"):
                 return item
 
-    #returns sum of weight of parts in bike instance, roudned to 2 decimals
+    #returns sum of weight of parts in bike instance, rounded to 2 decimals
     def getWeight(self):
         weight = 0
         bikeDict = self.bike.getDict()

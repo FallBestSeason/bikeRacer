@@ -3,6 +3,8 @@ import os, sys
 current_dir = os.path.dirname(__file__)
 sys.path.append(current_dir)
 
+#abstract instance module, handles data and math for making buttons with images on them
+#very similar to button.py, but overloading increased complexity too much
 class ImageButton:
     #init for using button with image
     def __init__(self, rect, image, string):

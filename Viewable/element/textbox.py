@@ -3,6 +3,7 @@ import os, sys
 current_dir = os.path.dirname(__file__)
 sys.path.append(current_dir)
 
+#abstract inference module, used to put text on screen in gui modules
 class TextBox:
     FONT_SPACING = 10
     FONT_COLOR = (0, 0, 0)

@@ -5,7 +5,6 @@ current_dir = os.path.dirname(__file__)
 sys.path.append(current_dir)
 
 def main():
-    #varss
     running = True
     screenSize = (1280, 720)
     #affects logic!
@@ -17,8 +16,7 @@ def main():
     screen = pygame.display.set_mode(screenSize)
 
     #gamehandler object represents game states
-    #handles logic for which UI to draw
-    #and starting and ending races
+    #handles logic for which UI to draw, starting and ending races
     gh = GameHandler(screenSize, pygame, screen)
 
     #set up clock object to limit game FPS
@@ -28,8 +26,7 @@ def main():
         for event in pygame.event.get():
             running = gh.event(event)
                         
-        #game tick 
-        #draws current UI
+        #tick, crunches frame and adds it to memory
         gh.draw(clock.tick(60) / 1000)
 
         #puts frame in memory on screen

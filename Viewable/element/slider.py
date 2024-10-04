@@ -31,7 +31,7 @@ class Slider:
             rect.height - 2 * padding
         )
 
-    #returns rect that is the same % amount of passed in rect as val is in range
+    #returns rect representing value in slider
     def generateFillBox(self, rect, minVal, maxVal, val):
         return Rect(
             rect.left, rect.top,

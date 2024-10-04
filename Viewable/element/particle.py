@@ -5,6 +5,7 @@ import os, sys
 current_dir = os.path.dirname(__file__)
 sys.path.append(current_dir)
 
+#fuck me.
 class ParticleNode:
     LIFESPAN = 50
     SIZE = 6

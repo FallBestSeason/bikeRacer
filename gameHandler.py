@@ -15,9 +15,11 @@ class GameHandler:
         self.pygame = pygame
         self.screen = screen
 
+    #tick, passes call through to current GUI instance
     def draw(self, dTime):
         self.gui.draw(self.pygame, self.screen, dTime)
 
+    #called when the user does something
     def event(self, event):
         if event.type == self.pygame.QUIT:
                 return False
@@ -34,6 +36,7 @@ class GameHandler:
         #must return true as it's used to check for running
         return True
 
+    #handles logic for switching between GUI instances
     def clicked(self, click):
         clicked = self.gui.buttonClickCheck(click)
         if clicked == "QUIT":
