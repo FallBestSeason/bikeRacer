@@ -25,7 +25,7 @@ class MainMenu:
     def __init__(self, screenSize):
         #gets resouce frolder set up 
         currentDir = os.path.dirname(__file__)
-        resPath = os.path.join(currentDir, "res\\")
+        resPath = os.path.join(currentDir, "res/")
 
         #set up text renderer
         logoFontSize = 15

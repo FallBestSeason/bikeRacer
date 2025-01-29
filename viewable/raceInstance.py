@@ -30,11 +30,11 @@ class RaceInstance:
     PLAYER_LARGE_DELTA_ROTATION = 1.5
     PLAYER_SKID_ROTATION = 60
     #paths for player sprites
-    PLAYER_SPRITE_PATH_CENTER = "\\player\\player0.png"
-    PLAYER_SPRITE_PATH_SMALL = "\\player\\player1.png"
-    PLAYER_SPRITE_PATH_LARGE = "\\player\\player2.png"
-    PLAYER_SPRITE_PATH_SKID = "\\player\\player3.png"
-    BG_SPRITE_PATH = "\\maps\\map1.png"
+    PLAYER_SPRITE_PATH_CENTER = "/player/player0.png"
+    PLAYER_SPRITE_PATH_SMALL = "/player/player1.png"
+    PLAYER_SPRITE_PATH_LARGE = "/player/player2.png"
+    PLAYER_SPRITE_PATH_SKID = "/player/player3.png"
+    BG_SPRITE_PATH = "/maps/map1.png"
 
     #mutable vars
     debugStrings = []
@@ -62,7 +62,7 @@ class RaceInstance:
     def __init__(self, screenSize):
         #gets resouce frolder set up 
         currentDir = os.path.dirname(__file__)
-        self.resPath = os.path.join(currentDir, "res\\")
+        self.resPath = os.path.join(currentDir, "res/")
 
         #set up font for debug
         if self.DEBUG_ENABLED:

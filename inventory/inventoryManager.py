@@ -36,8 +36,8 @@ class Bike:
         
 #GUI class
 class InventoryManager:
-    itemFilePath = "Inventory/items.json"
-    moneyFilePath = "Inventory/money.json"
+    itemFilePath = "inventory/items.json"
+    moneyFilePath = "inventory/money.json"
 
     def __init__(self):
         #pulls items from inventory json file

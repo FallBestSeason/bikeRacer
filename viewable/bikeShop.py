@@ -24,15 +24,15 @@ class BikeShop:
     FONT_COLOR = (0, 0, 0)
     BG_COLOR = (100, 100, 100)
 
-    BG_PATH = "\\shop elements\\shopBackground.png"
+    BG_PATH = "/shop elements/shopBackground.png"
     BUTTON_PATHS = [
-        "\\shop elements\\frameAndGearingLabel.png",
-        "\\shop elements\\saddleLabel.png",
-        "\\shop elements\\drivetrainLabel.png",
-        "\\shop elements\\wheelsLabel.png",
-        "\\shop elements\\cockpitLabel.png",
+        "/shop elements/frameAndGearingLabel.png",
+        "/shop elements/saddleLabel.png",
+        "/shop elements/drivetrainLabel.png",
+        "/shop elements/wheelsLabel.png",
+        "/shop elements/cockpitLabel.png",
     ]
-    POPUP_PATH = "\\shop elements\\popupBackground.png"
+    POPUP_PATH = "/shop elements/popupBackground.png"
     BUTTON_STRINGS = ["frame & gearing", "saddle", "drivetrain", "wheels", "cockpit"]
     SECONDARY_OPTIONS = [["frame", "front gearing", "rear gearing"], ["saddle", "seatpost"], 
                          ["crankset", "chainring", "chain", "pedals"], 
@@ -75,7 +75,7 @@ class BikeShop:
         self.buttons = []
 
         currentDir = os.path.dirname(__file__)
-        self.resPath = os.path.join(currentDir, "res\\")
+        self.resPath = os.path.join(currentDir, "res/")
         self.screenSize = screenSize
 
         #set up lower stripe that acts as background for buttons
@@ -109,11 +109,11 @@ class BikeShop:
         self.drawBikeVisualization(pygame, screen)
 
         #draws scale background to screen
-        scaleImage = pygame.image.load(f"{self.resPath}shop elements\\scale.png")
+        scaleImage = pygame.image.load(f"{self.resPath}shop elements/scale.png")
         screen.blit(scaleImage, self.SCALE_RECT)
 
         #draws clipboard background to screen
-        sliderLabelImage = pygame.image.load(f"{self.resPath}shop elements\\clipboard.png")
+        sliderLabelImage = pygame.image.load(f"{self.resPath}shop elements/clipboard.png")
         sliderLabelImage = pygame.transform.scale(sliderLabelImage, (500, 666))
         screen.blit(sliderLabelImage, self.CLIPBOARD_RECT)
         

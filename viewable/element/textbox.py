@@ -19,7 +19,7 @@ class TextBox:
                 rect[2] - self.FONT_SPACING,
                 rect[3] - self.FONT_SPACING)
 
-        resPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "res\\")
+        resPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "res/")
         font = pygame.font.Font(resPath+fontPath, fontSize)
         self.renderedText = font.render(text, True, self.FONT_COLOR)
 
@@ -28,7 +28,7 @@ class TextBox:
 
     def updateText(self, text):
         self.text = text
-        resPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "res\\")
+        resPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "res/")
         font = pygame.font.Font(resPath+self.fontPath, self.fontSize)
         self.renderedText = font.render(text, True, self.FONT_COLOR)
         
